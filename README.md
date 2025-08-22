@@ -4,7 +4,7 @@ A comprehensive, interactive fantasy football analysis dashboard built with Stre
 
 ## 🚀 Live Demo
 
-[Add your deployed dashboard link here]
+(https://fantasy-football-analysis-7ciw66tausuytwvldxwzde.streamlit.app/)
 
 ## ✨ Features
 
