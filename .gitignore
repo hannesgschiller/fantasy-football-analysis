@@ -41,6 +41,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
+<<<<<<< HEAD
 # Translations
 *.mo
 *.pot
@@ -62,7 +63,7 @@ docs/_build/
 
 # PyBuilder
 target/
-
+>>>>>>> 1c3191ebeaa2d155ab7c7a4c46b07f59ae926a98
 # Jupyter Notebook
 .ipynb_checkpoints
 
@@ -104,6 +105,7 @@ dmypy.json
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
@@ -114,6 +116,7 @@ dmypy.json
 ehthumbs.db
 Thumbs.db
 
+<<<<<<< HEAD
 # Project specific
 *.png
 *.jpg
@@ -133,4 +136,27 @@ data/
 
 # Temporary files
 temp/
-tmp/ 
+tmp/
+
+# API Keys and sensitive configuration
+config.py
+secrets.py
+.env
+*.key
+*.pem
+
+# Logs
+*.log
+logs/
+
+# Model files
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+
+# Large files
+*.zip
+*.tar.gz
+*.rar

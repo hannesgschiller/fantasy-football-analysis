@@ -33,7 +33,7 @@ A comprehensive, interactive fantasy football analysis dashboard built with Stre
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/fantasy-football-analysis.git
+   git clone https://github.com/hannesgschiller/fantasy-football-analysis.git
    cd fantasy-football-analysis
    ```
 
@@ -204,7 +204,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- **GitHub**: [@yourusername](https://github.com/yourusername)
+- **GitHub**: [@hannesgschiller](https://github.com/hannesgschiller)
 - **LinkedIn**: [Your LinkedIn](https://linkedin.com/in/yourprofile)
 - **Email**: your.email@example.com
 
@@ -223,4 +223,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Happy analyzing! 🏈📊** 
+**Happy analyzing! 🏈📊**
