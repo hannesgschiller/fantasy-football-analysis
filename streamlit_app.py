@@ -53,21 +53,37 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-@st.cache_data
 def load_data():
-    """Load fantasy football data with caching"""
-    # For deployment, you'll need to adjust this path or use sample data
-    data_path = "/Users/hannesschiller/Documents/NFL Fantasy data"
+    """Load fantasy football data without caching to avoid pickle issues"""
+    # Try multiple possible data paths for different environments
+    possible_paths = [
+        "/Users/hannesschiller/Documents/NFL Fantasy data",  # Local development
+        "./data/NFL Fantasy data",  # Relative path
+        "./NFL Fantasy data",  # Current directory
+        "/app/data/NFL Fantasy data",  # Docker/container path
+    ]
     
-    # Check if data path exists, if not use sample data
-    if not os.path.exists(data_path):
-        st.warning("Data path not found. Using sample data for demonstration.")
+    data_path = None
+    for path in possible_paths:
+        if os.path.exists(path):
+            data_path = path
+            break
+    
+    # If no data path found, use sample data
+    if data_path is None:
+        st.info("📊 Using sample data for demonstration. To use real data, add your fantasy football data files to the project.")
         return create_sample_data()
     
-    analyzer = FantasyFootballAnalyzer(data_path)
-    analyzer.load_weekly_data()
-    analyzer.load_season_data()
-    return analyzer
+    try:
+        analyzer = FantasyFootballAnalyzer(data_path)
+        analyzer.load_weekly_data()
+        analyzer.load_season_data()
+        st.success(f"✅ Loaded data from: {data_path}")
+        return analyzer
+    except Exception as e:
+        st.warning(f"⚠️ Error loading data from {data_path}: {str(e)}")
+        st.info("📊 Falling back to sample data for demonstration.")
+        return create_sample_data()
 
 def create_sample_data():
     """Create sample data for demonstration"""
@@ -79,27 +95,27 @@ def create_sample_data():
             
             # Create sample season data
             sample_qb = pd.DataFrame({
-                'Player': ['Lamar Jackson (BAL)', 'Josh Allen (BUF)', 'Joe Burrow (CIN)'],
-                'FPTS': [434.4, 385.1, 381.9],
-                'FPTS/G': [25.6, 22.7, 22.5]
+                'Player': ['Lamar Jackson (BAL)', 'Josh Allen (BUF)', 'Joe Burrow (CIN)', 'Patrick Mahomes (KC)', 'Jalen Hurts (PHI)'],
+                'FPTS': [434.4, 385.1, 381.9, 378.2, 375.8],
+                'FPTS/G': [25.6, 22.7, 22.5, 22.2, 22.1]
             })
             
             sample_rb = pd.DataFrame({
-                'Player': ['Saquon Barkley (PHI)', 'Derrick Henry (BAL)', 'Jahmyr Gibbs (DET)'],
-                'FPTS': [322.3, 317.4, 310.9],
-                'FPTS/G': [20.1, 18.7, 18.3]
+                'Player': ['Saquon Barkley (PHI)', 'Derrick Henry (BAL)', 'Jahmyr Gibbs (DET)', 'Christian McCaffrey (SF)', 'Alvin Kamara (NO)'],
+                'FPTS': [322.3, 317.4, 310.9, 308.7, 305.2],
+                'FPTS/G': [20.1, 18.7, 18.3, 18.2, 17.9]
             })
             
             sample_wr = pd.DataFrame({
-                'Player': ['Ja\'Marr Chase (CIN)', 'Justin Jefferson (MIN)', 'Amon-Ra St. Brown (DET)'],
-                'FPTS': [276.0, 214.5, 201.2],
-                'FPTS/G': [16.2, 12.6, 11.8]
+                'Player': ['Ja\'Marr Chase (CIN)', 'Justin Jefferson (MIN)', 'Amon-Ra St. Brown (DET)', 'Tyreek Hill (MIA)', 'CeeDee Lamb (DAL)'],
+                'FPTS': [276.0, 214.5, 201.2, 198.7, 195.3],
+                'FPTS/G': [16.2, 12.6, 11.8, 11.7, 11.5]
             })
             
             sample_te = pd.DataFrame({
-                'Player': ['George Kittle (SF)', 'Brock Bowers (LV)', 'Trey McBride (ARI)'],
-                'FPTS': [158.6, 150.7, 138.8],
-                'FPTS/G': [10.6, 8.9, 8.7]
+                'Player': ['George Kittle (SF)', 'Brock Bowers (LV)', 'Trey McBride (ARI)', 'Sam LaPorta (DET)', 'Evan Engram (JAX)'],
+                'FPTS': [158.6, 150.7, 138.8, 135.4, 132.1],
+                'FPTS/G': [10.6, 8.9, 8.7, 8.0, 7.8]
             })
             
             self.season_data = {
@@ -108,25 +124,65 @@ def create_sample_data():
                 'WR': sample_wr,
                 'TE': sample_te
             }
+            
+            # Create sample weekly data
+            for week in range(1, 6):  # Sample data for first 5 weeks
+                week_name = f"Week {week}"
+                self.weekly_data[week_name] = {}
+                
+                for position in self.positions:
+                    # Create sample weekly data for each position
+                    if position == 'QB':
+                        df = pd.DataFrame({
+                            'Player': ['Lamar Jackson (BAL)', 'Josh Allen (BUF)', 'Joe Burrow (CIN)'],
+                            'FPTS': [25.6 + week*2, 22.7 + week*1.5, 22.5 + week*1.8],
+                            'FPTS/G': [25.6, 22.7, 22.5]
+                        })
+                    elif position == 'RB':
+                        df = pd.DataFrame({
+                            'Player': ['Saquon Barkley (PHI)', 'Derrick Henry (BAL)', 'Jahmyr Gibbs (DET)'],
+                            'FPTS': [20.1 + week*1.5, 18.7 + week*1.2, 18.3 + week*1.4],
+                            'FPTS/G': [20.1, 18.7, 18.3]
+                        })
+                    elif position == 'WR':
+                        df = pd.DataFrame({
+                            'Player': ['Ja\'Marr Chase (CIN)', 'Justin Jefferson (MIN)', 'Amon-Ra St. Brown (DET)'],
+                            'FPTS': [16.2 + week*1.0, 12.6 + week*0.8, 11.8 + week*0.9],
+                            'FPTS/G': [16.2, 12.6, 11.8]
+                        })
+                    else:  # TE
+                        df = pd.DataFrame({
+                            'Player': ['George Kittle (SF)', 'Brock Bowers (LV)', 'Trey McBride (ARI)'],
+                            'FPTS': [10.6 + week*0.5, 8.9 + week*0.4, 8.7 + week*0.6],
+                            'FPTS/G': [10.6, 8.9, 8.7]
+                        })
+                    
+                    self.weekly_data[week_name][position] = df
         
         def get_top_performers(self, position, week=None, top_n=10):
-            if position in self.season_data:
-                return self.season_data[position].head(top_n)
-            return None
+            if week:
+                if week in self.weekly_data and position in self.weekly_data[week]:
+                    return self.weekly_data[week][position].head(top_n)
+                return None
+            else:
+                if position in self.season_data:
+                    return self.season_data[position].head(top_n)
+                return None
         
         def get_consistency_analysis(self, position, min_games=3):
             # Create sample consistency data
             sample_data = []
-            for i, row in self.season_data[position].iterrows():
-                sample_data.append({
-                    'Player': row['Player'],
-                    'Games_Played': 18,
-                    'Avg_FPTS': row['FPTS/G'],
-                    'Std_FPTS': row['FPTS/G'] * 0.3,
-                    'Min_FPTS': row['FPTS/G'] * 0.5,
-                    'Max_FPTS': row['FPTS/G'] * 1.5,
-                    'Consistency_Score': row['FPTS/G'] / (row['FPTS/G'] * 0.3 + 1)
-                })
+            if position in self.season_data:
+                for i, row in self.season_data[position].iterrows():
+                    sample_data.append({
+                        'Player': row['Player'],
+                        'Games_Played': 18,
+                        'Avg_FPTS': row['FPTS/G'],
+                        'Std_FPTS': row['FPTS/G'] * 0.3,
+                        'Min_FPTS': row['FPTS/G'] * 0.5,
+                        'Max_FPTS': row['FPTS/G'] * 1.5,
+                        'Consistency_Score': row['FPTS/G'] / (row['FPTS/G'] * 0.3 + 1)
+                    })
             return pd.DataFrame(sample_data)
     
     return SampleAnalyzer()
