@@ -93,6 +93,9 @@ def create_sample_data():
             self.weekly_data = {}
             self.season_data = {}
             
+            # Set random seed for reproducible data
+            np.random.seed(42)
+            
             # Create sample season data (18-week totals)
             sample_qb = pd.DataFrame({
                 'Player': ['Lamar Jackson (BAL)', 'Josh Allen (BUF)', 'Joe Burrow (CIN)', 'Patrick Mahomes (KC)', 'Jalen Hurts (PHI)'],
@@ -125,46 +128,68 @@ def create_sample_data():
                 'TE': sample_te
             }
             
-            # Create sample weekly data for all 18 weeks
-            for week in range(1, 19):  # Full 18-week season
+            # Create sample weekly data for all 18 weeks with consistent data
+            self._create_weekly_data()
+        
+        def _create_weekly_data(self):
+            """Create consistent weekly data for all 18 weeks"""
+            # Pre-generate weekly variations for consistency
+            weekly_variations = {}
+            for position in self.positions:
+                weekly_variations[position] = []
+                for week in range(1, 19):
+                    if position == 'QB':
+                        variation = np.random.normal(0, 5)
+                    elif position == 'RB':
+                        variation = np.random.normal(0, 4)
+                    elif position == 'WR':
+                        variation = np.random.normal(0, 3)
+                    else:  # TE
+                        variation = np.random.normal(0, 2)
+                    weekly_variations[position].append(variation)
+            
+            # Create weekly data for all 18 weeks
+            for week in range(1, 19):
                 week_name = f"Week {week}"
                 self.weekly_data[week_name] = {}
                 
                 for position in self.positions:
-                    # Create sample weekly data for each position with realistic variations
                     if position == 'QB':
-                        # Add some randomness and realistic weekly variations
                         base_scores = [25.6, 22.7, 22.5, 22.2, 22.1]
-                        weekly_variation = np.random.normal(0, 5)  # Random weekly variation
-                        df = pd.DataFrame({
-                            'Player': ['Lamar Jackson (BAL)', 'Josh Allen (BUF)', 'Joe Burrow (CIN)', 'Patrick Mahomes (KC)', 'Jalen Hurts (PHI)'],
-                            'FPTS': [max(0, base + weekly_variation + np.random.normal(0, 3)) for base in base_scores],
-                            'FPTS/G': base_scores
-                        })
+                        players = ['Lamar Jackson (BAL)', 'Josh Allen (BUF)', 'Joe Burrow (CIN)', 'Patrick Mahomes (KC)', 'Jalen Hurts (PHI)']
                     elif position == 'RB':
                         base_scores = [20.1, 18.7, 18.3, 18.2, 17.9]
-                        weekly_variation = np.random.normal(0, 4)
-                        df = pd.DataFrame({
-                            'Player': ['Saquon Barkley (PHI)', 'Derrick Henry (BAL)', 'Jahmyr Gibbs (DET)', 'Christian McCaffrey (SF)', 'Alvin Kamara (NO)'],
-                            'FPTS': [max(0, base + weekly_variation + np.random.normal(0, 2.5)) for base in base_scores],
-                            'FPTS/G': base_scores
-                        })
+                        players = ['Saquon Barkley (PHI)', 'Derrick Henry (BAL)', 'Jahmyr Gibbs (DET)', 'Christian McCaffrey (SF)', 'Alvin Kamara (NO)']
                     elif position == 'WR':
                         base_scores = [16.2, 12.6, 11.8, 11.7, 11.5]
-                        weekly_variation = np.random.normal(0, 3)
-                        df = pd.DataFrame({
-                            'Player': ['Ja\'Marr Chase (CIN)', 'Justin Jefferson (MIN)', 'Amon-Ra St. Brown (DET)', 'Tyreek Hill (MIA)', 'CeeDee Lamb (DAL)'],
-                            'FPTS': [max(0, base + weekly_variation + np.random.normal(0, 2)) for base in base_scores],
-                            'FPTS/G': base_scores
-                        })
+                        players = ['Ja\'Marr Chase (CIN)', 'Justin Jefferson (MIN)', 'Amon-Ra St. Brown (DET)', 'Tyreek Hill (MIA)', 'CeeDee Lamb (DAL)']
                     else:  # TE
                         base_scores = [10.6, 8.9, 8.7, 8.0, 7.8]
-                        weekly_variation = np.random.normal(0, 2)
-                        df = pd.DataFrame({
-                            'Player': ['George Kittle (SF)', 'Brock Bowers (LV)', 'Trey McBride (ARI)', 'Sam LaPorta (DET)', 'Evan Engram (JAX)'],
-                            'FPTS': [max(0, base + weekly_variation + np.random.normal(0, 1.5)) for base in base_scores],
-                            'FPTS/G': base_scores
-                        })
+                        players = ['George Kittle (SF)', 'Brock Bowers (LV)', 'Trey McBride (ARI)', 'Sam LaPorta (DET)', 'Evan Engram (JAX)']
+                    
+                    # Generate weekly scores with consistent variations
+                    weekly_variation = weekly_variations[position][week-1]
+                    weekly_scores = []
+                    
+                    for i, base_score in enumerate(base_scores):
+                        # Add weekly variation plus individual player variation
+                        if position == 'QB':
+                            player_variation = np.random.normal(0, 3)
+                        elif position == 'RB':
+                            player_variation = np.random.normal(0, 2.5)
+                        elif position == 'WR':
+                            player_variation = np.random.normal(0, 2)
+                        else:  # TE
+                            player_variation = np.random.normal(0, 1.5)
+                        
+                        weekly_score = max(0, base_score + weekly_variation + player_variation)
+                        weekly_scores.append(round(weekly_score, 1))
+                    
+                    df = pd.DataFrame({
+                        'Player': players,
+                        'FPTS': weekly_scores,
+                        'FPTS/G': base_scores
+                    })
                     
                     self.weekly_data[week_name][position] = df
         
@@ -207,6 +232,13 @@ def create_sample_data():
                 df = pd.DataFrame(sample_data)
                 return df.sort_values('Consistency_Score', ascending=False)
             return pd.DataFrame(sample_data)
+        
+        def debug_weekly_data(self):
+            """Debug function to verify weekly data creation"""
+            print(f"Total weeks created: {len(self.weekly_data)}")
+            print(f"Week names: {sorted(self.weekly_data.keys())}")
+            for week in sorted(self.weekly_data.keys()):
+                print(f"{week}: {list(self.weekly_data[week].keys())}")
     
     return SampleAnalyzer()
 
@@ -448,6 +480,11 @@ def main():
     # Load data with progress indicator
     with st.spinner('Loading fantasy football data...'):
         analyzer = load_data()
+    
+    # Debug: Show available weeks
+    if hasattr(analyzer, 'weekly_data'):
+        available_weeks = sorted(analyzer.weekly_data.keys())
+        st.info(f"📊 Available weeks: {len(available_weeks)} weeks - {', '.join(available_weeks[:5])}{'...' if len(available_weeks) > 5 else ''}")
     
     st.success("✅ Data loaded successfully!")
     
