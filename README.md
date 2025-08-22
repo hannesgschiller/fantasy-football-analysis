@@ -205,8 +205,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact
 
 - **GitHub**: [@hannesgschiller](https://github.com/hannesgschiller)
-- **LinkedIn**: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- **Email**: your.email@example.com
+- **LinkedIn**: https://www.linkedin.com/in/hannes-schiller-b1301b134/
+- **Email**: Hannesgschiller@gmail.com
 
 ## 🚀 Quick Start for Professional Website
 
