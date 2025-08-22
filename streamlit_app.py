@@ -93,28 +93,28 @@ def create_sample_data():
             self.weekly_data = {}
             self.season_data = {}
             
-            # Create sample season data
+            # Create sample season data (18-week totals)
             sample_qb = pd.DataFrame({
                 'Player': ['Lamar Jackson (BAL)', 'Josh Allen (BUF)', 'Joe Burrow (CIN)', 'Patrick Mahomes (KC)', 'Jalen Hurts (PHI)'],
-                'FPTS': [434.4, 385.1, 381.9, 378.2, 375.8],
+                'FPTS': [460.8, 408.6, 405.0, 399.6, 397.8],  # 18 weeks * FPTS/G
                 'FPTS/G': [25.6, 22.7, 22.5, 22.2, 22.1]
             })
             
             sample_rb = pd.DataFrame({
                 'Player': ['Saquon Barkley (PHI)', 'Derrick Henry (BAL)', 'Jahmyr Gibbs (DET)', 'Christian McCaffrey (SF)', 'Alvin Kamara (NO)'],
-                'FPTS': [322.3, 317.4, 310.9, 308.7, 305.2],
+                'FPTS': [361.8, 336.6, 329.4, 327.6, 322.2],  # 18 weeks * FPTS/G
                 'FPTS/G': [20.1, 18.7, 18.3, 18.2, 17.9]
             })
             
             sample_wr = pd.DataFrame({
                 'Player': ['Ja\'Marr Chase (CIN)', 'Justin Jefferson (MIN)', 'Amon-Ra St. Brown (DET)', 'Tyreek Hill (MIA)', 'CeeDee Lamb (DAL)'],
-                'FPTS': [276.0, 214.5, 201.2, 198.7, 195.3],
+                'FPTS': [291.6, 226.8, 212.4, 210.6, 207.0],  # 18 weeks * FPTS/G
                 'FPTS/G': [16.2, 12.6, 11.8, 11.7, 11.5]
             })
             
             sample_te = pd.DataFrame({
                 'Player': ['George Kittle (SF)', 'Brock Bowers (LV)', 'Trey McBride (ARI)', 'Sam LaPorta (DET)', 'Evan Engram (JAX)'],
-                'FPTS': [158.6, 150.7, 138.8, 135.4, 132.1],
+                'FPTS': [190.8, 160.2, 156.6, 144.0, 140.4],  # 18 weeks * FPTS/G
                 'FPTS/G': [10.6, 8.9, 8.7, 8.0, 7.8]
             })
             
@@ -125,36 +125,45 @@ def create_sample_data():
                 'TE': sample_te
             }
             
-            # Create sample weekly data
-            for week in range(1, 6):  # Sample data for first 5 weeks
+            # Create sample weekly data for all 18 weeks
+            for week in range(1, 19):  # Full 18-week season
                 week_name = f"Week {week}"
                 self.weekly_data[week_name] = {}
                 
                 for position in self.positions:
-                    # Create sample weekly data for each position
+                    # Create sample weekly data for each position with realistic variations
                     if position == 'QB':
+                        # Add some randomness and realistic weekly variations
+                        base_scores = [25.6, 22.7, 22.5, 22.2, 22.1]
+                        weekly_variation = np.random.normal(0, 5)  # Random weekly variation
                         df = pd.DataFrame({
-                            'Player': ['Lamar Jackson (BAL)', 'Josh Allen (BUF)', 'Joe Burrow (CIN)'],
-                            'FPTS': [25.6 + week*2, 22.7 + week*1.5, 22.5 + week*1.8],
-                            'FPTS/G': [25.6, 22.7, 22.5]
+                            'Player': ['Lamar Jackson (BAL)', 'Josh Allen (BUF)', 'Joe Burrow (CIN)', 'Patrick Mahomes (KC)', 'Jalen Hurts (PHI)'],
+                            'FPTS': [max(0, base + weekly_variation + np.random.normal(0, 3)) for base in base_scores],
+                            'FPTS/G': base_scores
                         })
                     elif position == 'RB':
+                        base_scores = [20.1, 18.7, 18.3, 18.2, 17.9]
+                        weekly_variation = np.random.normal(0, 4)
                         df = pd.DataFrame({
-                            'Player': ['Saquon Barkley (PHI)', 'Derrick Henry (BAL)', 'Jahmyr Gibbs (DET)'],
-                            'FPTS': [20.1 + week*1.5, 18.7 + week*1.2, 18.3 + week*1.4],
-                            'FPTS/G': [20.1, 18.7, 18.3]
+                            'Player': ['Saquon Barkley (PHI)', 'Derrick Henry (BAL)', 'Jahmyr Gibbs (DET)', 'Christian McCaffrey (SF)', 'Alvin Kamara (NO)'],
+                            'FPTS': [max(0, base + weekly_variation + np.random.normal(0, 2.5)) for base in base_scores],
+                            'FPTS/G': base_scores
                         })
                     elif position == 'WR':
+                        base_scores = [16.2, 12.6, 11.8, 11.7, 11.5]
+                        weekly_variation = np.random.normal(0, 3)
                         df = pd.DataFrame({
-                            'Player': ['Ja\'Marr Chase (CIN)', 'Justin Jefferson (MIN)', 'Amon-Ra St. Brown (DET)'],
-                            'FPTS': [16.2 + week*1.0, 12.6 + week*0.8, 11.8 + week*0.9],
-                            'FPTS/G': [16.2, 12.6, 11.8]
+                            'Player': ['Ja\'Marr Chase (CIN)', 'Justin Jefferson (MIN)', 'Amon-Ra St. Brown (DET)', 'Tyreek Hill (MIA)', 'CeeDee Lamb (DAL)'],
+                            'FPTS': [max(0, base + weekly_variation + np.random.normal(0, 2)) for base in base_scores],
+                            'FPTS/G': base_scores
                         })
                     else:  # TE
+                        base_scores = [10.6, 8.9, 8.7, 8.0, 7.8]
+                        weekly_variation = np.random.normal(0, 2)
                         df = pd.DataFrame({
-                            'Player': ['George Kittle (SF)', 'Brock Bowers (LV)', 'Trey McBride (ARI)'],
-                            'FPTS': [10.6 + week*0.5, 8.9 + week*0.4, 8.7 + week*0.6],
-                            'FPTS/G': [10.6, 8.9, 8.7]
+                            'Player': ['George Kittle (SF)', 'Brock Bowers (LV)', 'Trey McBride (ARI)', 'Sam LaPorta (DET)', 'Evan Engram (JAX)'],
+                            'FPTS': [max(0, base + weekly_variation + np.random.normal(0, 1.5)) for base in base_scores],
+                            'FPTS/G': base_scores
                         })
                     
                     self.weekly_data[week_name][position] = df
@@ -170,19 +179,33 @@ def create_sample_data():
                 return None
         
         def get_consistency_analysis(self, position, min_games=3):
-            # Create sample consistency data
+            # Create sample consistency data for full 18-week season
             sample_data = []
             if position in self.season_data:
                 for i, row in self.season_data[position].iterrows():
+                    # Generate realistic consistency metrics
+                    avg_fpts = row['FPTS/G']
+                    std_fpts = avg_fpts * 0.35  # 35% standard deviation for realistic variance
+                    min_fpts = max(0, avg_fpts - 2 * std_fpts)  # 2 standard deviations below mean
+                    max_fpts = avg_fpts + 2 * std_fpts  # 2 standard deviations above mean
+                    
+                    # Consistency score: higher score = more consistent
+                    consistency_score = avg_fpts / (std_fpts + 1)
+                    
                     sample_data.append({
                         'Player': row['Player'],
                         'Games_Played': 18,
-                        'Avg_FPTS': row['FPTS/G'],
-                        'Std_FPTS': row['FPTS/G'] * 0.3,
-                        'Min_FPTS': row['FPTS/G'] * 0.5,
-                        'Max_FPTS': row['FPTS/G'] * 1.5,
-                        'Consistency_Score': row['FPTS/G'] / (row['FPTS/G'] * 0.3 + 1)
+                        'Avg_FPTS': round(avg_fpts, 1),
+                        'Std_FPTS': round(std_fpts, 1),
+                        'Min_FPTS': round(min_fpts, 1),
+                        'Max_FPTS': round(max_fpts, 1),
+                        'Consistency_Score': round(consistency_score, 2)
                     })
+            
+            # Sort by consistency score (highest first)
+            if sample_data:
+                df = pd.DataFrame(sample_data)
+                return df.sort_values('Consistency_Score', ascending=False)
             return pd.DataFrame(sample_data)
     
     return SampleAnalyzer()
