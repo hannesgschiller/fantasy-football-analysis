@@ -78,65 +78,63 @@ st.markdown("""
     
     /* Week filter styling */
     .week-filter {
-        background: linear-gradient(135deg, #eff6ff, #dbeafe);
+        background: #f8fafc;
         padding: 1.5rem;
         border-radius: 1rem;
         margin-bottom: 1.5rem;
-        border: 1px solid #3b82f6;
-        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
-        color: #1f2937;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        color: #374151;
     }
     
     /* Section headers */
     .section-header {
         font-size: 1.8rem;
         font-weight: 700;
-        color: #1e3a8a;
+        color: #374151;
         margin-bottom: 1rem;
         padding-bottom: 0.5rem;
-        border-bottom: 3px solid #3b82f6;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        border-bottom: 2px solid #d1d5db;
     }
     
     /* Subsection headers */
     .subsection-header {
         font-size: 1.4rem;
         font-weight: 600;
-        color: #1f2937;
+        color: #4b5563;
         margin-bottom: 1rem;
         padding-left: 0.5rem;
-        border-left: 4px solid #f59e0b;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        border-left: 3px solid #9ca3af;
     }
     
     /* Info boxes */
     .info-box {
-        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        background: #f9fafb;
         padding: 1rem;
         border-radius: 0.75rem;
-        border: 1px solid #10b981;
+        border: 1px solid #e5e7eb;
         margin-bottom: 1rem;
-        color: #1f2937;
+        color: #374151;
     }
     
     /* Warning boxes */
     .warning-box {
-        background: linear-gradient(135deg, #fffbeb, #fef3c7);
+        background: #fef3c7;
         padding: 1rem;
         border-radius: 0.75rem;
-        border: 1px solid #f59e0b;
+        border: 1px solid #fbbf24;
         margin-bottom: 1rem;
-        color: #1f2937;
+        color: #92400e;
     }
     
     /* Success boxes */
     .success-box {
-        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        background: #f0fdf4;
         padding: 1rem;
         border-radius: 0.75rem;
-        border: 1px solid #10b981;
+        border: 1px solid #86efac;
         margin-bottom: 1rem;
-        color: #1f2937;
+        color: #166534;
     }
     
     /* Chart containers */
@@ -276,8 +274,8 @@ def load_data():
     if data_path is None:
         st.markdown("""
         <div class="info-box">
-            <strong style="color: #065f46;">📊 Using sample data for demonstration.</strong> 
-            <span style="color: #1f2937;">To use real data, add your fantasy football data files to the project.</span>
+            <strong style="color: #475569;">📊 Using sample data for demonstration.</strong> 
+            <span style="color: #64748b;">To use real data, add your fantasy football data files to the project.</span>
         </div>
         """, unsafe_allow_html=True)
         return create_sample_data()
@@ -288,8 +286,8 @@ def load_data():
         analyzer.load_season_data()
         st.markdown(f"""
         <div class="success-box">
-            <strong style="color: #065f46;">✅ Loaded data from:</strong> 
-            <span style="color: #1f2937;">{data_path}</span>
+            <strong style="color: #166534;">✅ Loaded data from:</strong> 
+            <span style="color: #374151;">{data_path}</span>
         </div>
         """, unsafe_allow_html=True)
         return analyzer
@@ -521,7 +519,7 @@ def create_week_filter():
     if filter_type == "All Weeks":
         selected_weeks = available_weeks
         st.markdown(f"""
-        <div style="background: #dbeafe; color: #1e3a8a; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #3b82f6; font-weight: 600;">
+        <div style="background: #f1f5f9; color: #475569; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; font-weight: 500;">
             📊 Showing data for all {len(selected_weeks)} weeks
         </div>
         """, unsafe_allow_html=True)
@@ -530,7 +528,7 @@ def create_week_filter():
         selected_week = st.selectbox("Select Week:", available_weeks)
         selected_weeks = [selected_week]
         st.markdown(f"""
-        <div style="background: #dbeafe; color: #1e3a8a; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #3b82f6; font-weight: 600;">
+        <div style="background: #f1f5f9; color: #475569; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; font-weight: 500;">
             📊 Showing data for {selected_week}
         </div>
         """, unsafe_allow_html=True)
@@ -548,7 +546,7 @@ def create_week_filter():
         if start_idx <= end_idx:
             selected_weeks = available_weeks[start_idx:end_idx+1]
             st.markdown(f"""
-            <div style="background: #dbeafe; color: #1e3a8a; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #3b82f6; font-weight: 600;">
+            <div style="background: #f1f5f9; color: #475569; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; font-weight: 500;">
                 📊 Showing data for weeks {start_week} to {end_week} ({len(selected_weeks)} weeks)
             </div>
             """, unsafe_allow_html=True)
@@ -567,7 +565,7 @@ def create_week_filter():
         )
         if selected_weeks:
             st.markdown(f"""
-            <div style="background: #dbeafe; color: #1e3a8a; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #3b82f6; font-weight: 600;">
+            <div style="background: #f1f5f9; color: #475569; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; font-weight: 500;">
                 📊 Showing data for {len(selected_weeks)} selected weeks
             </div>
             """, unsafe_allow_html=True)
@@ -862,9 +860,9 @@ def show_overview(analyzer, selected_weeks):
         season_data_count = len(analyzer.season_data) if hasattr(analyzer, 'season_data') and analyzer.season_data else 0
         
         st.markdown(f"""
-        <div style="background: #f3f4f6; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #d1d5db;">
-            <strong style="color: #374151;">🔍 Debug Info:</strong> 
-            <span style="color: #6b7280;">Selected weeks: {selected_weeks_count} | 
+        <div style="background: #f8fafc; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #e2e8f0;">
+            <strong style="color: #475569;">🔍 Debug Info:</strong> 
+            <span style="color: #64748b;">Selected weeks: {selected_weeks_count} | 
             Season data available: {season_data_count} positions</span>
         </div>
         """, unsafe_allow_html=True)
