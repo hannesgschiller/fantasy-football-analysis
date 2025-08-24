@@ -857,13 +857,24 @@ def show_overview(analyzer, selected_weeks):
     st.markdown('<h2 class="section-header">📊 Season Overview</h2>', unsafe_allow_html=True)
     
     # Debug: Show what data we have
-    st.markdown("""
-    <div style="background: #f3f4f6; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #d1d5db;">
-        <strong style="color: #374151;">🔍 Debug Info:</strong> 
-        <span style="color: #6b7280;">Selected weeks: {len(selected_weeks) if selected_weeks else 0} | 
-        Season data available: {len(analyzer.season_data) if hasattr(analyzer, 'season_data') else 0} positions</span>
-    </div>
-    """.format(len(selected_weeks) if selected_weeks else 0, len(analyzer.season_data) if hasattr(analyzer, 'season_data') else 0), unsafe_allow_html=True)
+    try:
+        selected_weeks_count = len(selected_weeks) if selected_weeks else 0
+        season_data_count = len(analyzer.season_data) if hasattr(analyzer, 'season_data') and analyzer.season_data else 0
+        
+        st.markdown(f"""
+        <div style="background: #f3f4f6; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #d1d5db;">
+            <strong style="color: #374151;">🔍 Debug Info:</strong> 
+            <span style="color: #6b7280;">Selected weeks: {selected_weeks_count} | 
+            Season data available: {season_data_count} positions</span>
+        </div>
+        """, unsafe_allow_html=True)
+    except Exception as e:
+        st.markdown(f"""
+        <div style="background: #fef2f2; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #ef4444;">
+            <strong style="color: #dc2626;">⚠️ Debug Error:</strong> 
+            <span style="color: #6b7280;">{str(e)[:50]}</span>
+        </div>
+        """, unsafe_allow_html=True)
     
     # Key metrics with modern styling
     st.markdown('<div class="metric-card">', unsafe_allow_html=True)
