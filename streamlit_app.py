@@ -76,12 +76,13 @@ st.markdown("""
     
     /* Week filter styling */
     .week-filter {
-        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        background: linear-gradient(135deg, #eff6ff, #dbeafe);
         padding: 1.5rem;
         border-radius: 1rem;
         margin-bottom: 1.5rem;
-        border: 1px solid #93c5fd;
+        border: 1px solid #3b82f6;
         box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
+        color: #1f2937;
     }
     
     /* Section headers */
@@ -106,29 +107,32 @@ st.markdown("""
     
     /* Info boxes */
     .info-box {
-        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-        padding: 1rem;
-        border-radius: 0.75rem;
-        border: 1px solid #6ee7b7;
-        margin-bottom: 1rem;
-    }
-    
-    /* Warning boxes */
-    .warning-box {
-        background: linear-gradient(135deg, #fef3c7, #fde68a);
-        padding: 1rem;
-        border-radius: 0.75rem;
-        border: 1px solid #f59e0b;
-        margin-bottom: 1rem;
-    }
-    
-    /* Success boxes */
-    .success-box {
-        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
         padding: 1rem;
         border-radius: 0.75rem;
         border: 1px solid #10b981;
         margin-bottom: 1rem;
+        color: #1f2937;
+    }
+    
+    /* Warning boxes */
+    .warning-box {
+        background: linear-gradient(135deg, #fffbeb, #fef3c7);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid #f59e0b;
+        margin-bottom: 1rem;
+        color: #1f2937;
+    }
+    
+    /* Success boxes */
+    .success-box {
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid #10b981;
+        margin-bottom: 1rem;
+        color: #1f2937;
     }
     
     /* Chart containers */
@@ -183,9 +187,28 @@ st.markdown("""
     
     /* Overall page background */
     .main .block-container {
-        background: var(--background-color);
+        background: #ffffff;
         padding-top: 2rem;
         padding-bottom: 2rem;
+    }
+    
+    /* Improve text readability */
+    .stMarkdown {
+        color: #1f2937;
+    }
+    
+    /* Better contrast for labels */
+    .stSelectbox label, .stSlider label {
+        color: #374151 !important;
+        font-weight: 600;
+    }
+    
+    /* Improve metric readability */
+    .metric-container {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -210,7 +233,8 @@ def load_data():
     if data_path is None:
         st.markdown("""
         <div class="info-box">
-            <strong>📊 Using sample data for demonstration.</strong> To use real data, add your fantasy football data files to the project.
+            <strong style="color: #065f46;">📊 Using sample data for demonstration.</strong> 
+            <span style="color: #1f2937;">To use real data, add your fantasy football data files to the project.</span>
         </div>
         """, unsafe_allow_html=True)
         return create_sample_data()
@@ -221,19 +245,21 @@ def load_data():
         analyzer.load_season_data()
         st.markdown(f"""
         <div class="success-box">
-            <strong>✅ Loaded data from:</strong> {data_path}
+            <strong style="color: #065f46;">✅ Loaded data from:</strong> 
+            <span style="color: #1f2937;">{data_path}</span>
         </div>
         """, unsafe_allow_html=True)
         return analyzer
     except Exception as e:
         st.markdown(f"""
         <div class="warning-box">
-            <strong>⚠️ Error loading data from {data_path}:</strong> {str(e)}
+            <strong style="color: #92400e;">⚠️ Error loading data from {data_path}:</strong> 
+            <span style="color: #1f2937;">{str(e)}</span>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("""
         <div class="info-box">
-            <strong>📊 Falling back to sample data for demonstration.</strong>
+            <strong style="color: #065f46;">📊 Falling back to sample data for demonstration.</strong>
         </div>
         """, unsafe_allow_html=True)
         return create_sample_data()
@@ -708,7 +734,7 @@ def main():
         <h1 style="color: white; font-size: 2.5rem; font-weight: 800; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
             🏈 Fantasy Football Analysis Dashboard
         </h1>
-        <p style="color: rgba(255,255,255,0.9); font-size: 1.1rem; margin: 0.5rem 0 0 0;">
+        <p style="color: white; font-size: 1.1rem; margin: 0.5rem 0 0 0; font-weight: 500;">
             Professional NFL Fantasy Football Analytics & Insights
         </p>
     </div>
@@ -723,11 +749,12 @@ def main():
         available_weeks = sorted(analyzer.weekly_data.keys())
         st.markdown(f"""
         <div class="info-box">
-            <strong>📊 Data Overview:</strong> {len(available_weeks)} weeks available - {', '.join(available_weeks[:5])}{'...' if len(available_weeks) > 5 else ''}
+            <strong style="color: #065f46;">📊 Data Overview:</strong> 
+            <span style="color: #1f2937;">{len(available_weeks)} weeks available - {', '.join(available_weeks[:5])}{'...' if len(available_weeks) > 5 else ''}</span>
         </div>
         """, unsafe_allow_html=True)
     
-    st.markdown('<div class="success-box"><strong>✅ Data loaded successfully!</strong></div>', unsafe_allow_html=True)
+    st.markdown('<div class="success-box"><strong style="color: #065f46;">✅ Data loaded successfully!</strong></div>', unsafe_allow_html=True)
     
     # Week filter
     selected_weeks = create_week_filter()
@@ -911,7 +938,8 @@ def show_consistency_analysis(analyzer, selected_weeks):
     if selected_weeks and len(selected_weeks) < 18:
         st.markdown(f"""
         <div class="warning-box">
-            <strong>📝 Note:</strong> Consistency analysis is shown for the full season. You're currently filtering {len(selected_weeks)} weeks.
+            <strong style="color: #92400e;">📝 Note:</strong> 
+            <span style="color: #1f2937;">Consistency analysis is shown for the full season. You're currently filtering {len(selected_weeks)} weeks.</span>
         </div>
         """, unsafe_allow_html=True)
     
