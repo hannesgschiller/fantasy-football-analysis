@@ -60,18 +60,20 @@ st.markdown("""
     
     /* Metric cards with modern design */
     .metric-card {
-        background: linear-gradient(135deg, var(--card-background), #f1f5f9);
+        background: linear-gradient(135deg, #ffffff, #f8fafc);
         padding: 1.5rem;
         border-radius: 1rem;
-        border: 1px solid #e2e8f0;
+        border: 2px solid #e2e8f0;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         transition: all 0.3s ease;
         margin-bottom: 1rem;
+        color: #1f2937;
     }
     
     .metric-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        border-color: #3b82f6;
     }
     
     /* Week filter styling */
@@ -89,20 +91,22 @@ st.markdown("""
     .section-header {
         font-size: 1.8rem;
         font-weight: 700;
-        color: var(--primary-color);
+        color: #1e3a8a;
         margin-bottom: 1rem;
         padding-bottom: 0.5rem;
-        border-bottom: 3px solid var(--secondary-color);
+        border-bottom: 3px solid #3b82f6;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
     
     /* Subsection headers */
     .subsection-header {
         font-size: 1.4rem;
         font-weight: 600;
-        color: var(--text-primary);
+        color: #1f2937;
         margin-bottom: 1rem;
         padding-left: 0.5rem;
-        border-left: 4px solid var(--accent-color);
+        border-left: 4px solid #f59e0b;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
     
     /* Info boxes */
@@ -209,6 +213,45 @@ st.markdown("""
         border: 1px solid #e5e7eb;
         border-radius: 0.5rem;
         padding: 1rem;
+    }
+    
+    /* Ensure Streamlit metrics are readable */
+    .stMetric {
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 0.5rem !important;
+        padding: 1rem !important;
+        color: #1f2937 !important;
+    }
+    
+    .stMetric > div > div > div {
+        color: #1f2937 !important;
+    }
+    
+    .stMetric label {
+        color: #374151 !important;
+        font-weight: 600 !important;
+    }
+    
+    .stMetric [data-testid="metric-container"] {
+        background: #ffffff !important;
+        color: #1f2937 !important;
+    }
+    
+    /* Ensure tabs are readable */
+    .stTabs [data-baseweb="tab-list"] {
+        background: #ffffff !important;
+        border-bottom: 2px solid #e5e7eb !important;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        color: #374151 !important;
+        font-weight: 600 !important;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        color: #1e3a8a !important;
+        border-bottom: 2px solid #1e3a8a !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -459,7 +502,7 @@ def get_filtered_data(analyzer, selected_weeks, position):
 def create_week_filter():
     """Create week filter widget"""
     st.markdown('<div class="week-filter">', unsafe_allow_html=True)
-    st.subheader("📅 Week Filter")
+    st.markdown('<h3 style="color: #1e3a8a; font-weight: 700; margin-bottom: 1rem;">📅 Week Filter</h3>', unsafe_allow_html=True)
     
     # Get available weeks
     analyzer = load_data()
@@ -477,12 +520,20 @@ def create_week_filter():
     
     if filter_type == "All Weeks":
         selected_weeks = available_weeks
-        st.info(f"Showing data for all {len(selected_weeks)} weeks")
+        st.markdown(f"""
+        <div style="background: #dbeafe; color: #1e3a8a; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #3b82f6; font-weight: 600;">
+            📊 Showing data for all {len(selected_weeks)} weeks
+        </div>
+        """, unsafe_allow_html=True)
         
     elif filter_type == "Single Week":
         selected_week = st.selectbox("Select Week:", available_weeks)
         selected_weeks = [selected_week]
-        st.info(f"Showing data for {selected_week}")
+        st.markdown(f"""
+        <div style="background: #dbeafe; color: #1e3a8a; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #3b82f6; font-weight: 600;">
+            📊 Showing data for {selected_week}
+        </div>
+        """, unsafe_allow_html=True)
         
     elif filter_type == "Week Range":
         col1, col2 = st.columns(2)
@@ -496,9 +547,17 @@ def create_week_filter():
         
         if start_idx <= end_idx:
             selected_weeks = available_weeks[start_idx:end_idx+1]
-            st.info(f"Showing data for weeks {start_week} to {end_week} ({len(selected_weeks)} weeks)")
+            st.markdown(f"""
+            <div style="background: #dbeafe; color: #1e3a8a; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #3b82f6; font-weight: 600;">
+                📊 Showing data for weeks {start_week} to {end_week} ({len(selected_weeks)} weeks)
+            </div>
+            """, unsafe_allow_html=True)
         else:
-            st.error("Start week must be before or equal to end week")
+            st.markdown("""
+            <div style="background: #fef2f2; color: #dc2626; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #ef4444; font-weight: 600;">
+                ⚠️ Start week must be before or equal to end week
+            </div>
+            """, unsafe_allow_html=True)
             
     elif filter_type == "Custom Selection":
         selected_weeks = st.multiselect(
@@ -507,9 +566,17 @@ def create_week_filter():
             default=available_weeks[:5]  # Default to first 5 weeks
         )
         if selected_weeks:
-            st.info(f"Showing data for {len(selected_weeks)} selected weeks")
+            st.markdown(f"""
+            <div style="background: #dbeafe; color: #1e3a8a; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #3b82f6; font-weight: 600;">
+                📊 Showing data for {len(selected_weeks)} selected weeks
+            </div>
+            """, unsafe_allow_html=True)
         else:
-            st.warning("Please select at least one week")
+            st.markdown("""
+            <div style="background: #fef3c7; color: #92400e; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #f59e0b; font-weight: 600;">
+                ⚠️ Please select at least one week
+            </div>
+            """, unsafe_allow_html=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
     
