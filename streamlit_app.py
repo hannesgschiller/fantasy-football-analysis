@@ -699,8 +699,20 @@ def create_weekly_trends_chart(analyzer, position, top_n=5, selected_weeks=None)
 def main():
     """Main dashboard function"""
     
-    # Header with modern styling
-    st.markdown('<h1 class="main-header">🏈 Fantasy Football Analysis Dashboard</h1>', unsafe_allow_html=True)
+    # Header with NFL logo and modern styling
+    st.markdown("""
+    <div style="text-align: center; background: linear-gradient(135deg, #1e3a8a, #3b82f6); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <img src="https://upload.wikimedia.org/wikipedia/en/a/a2/National_Football_League_logo.svg" 
+             alt="NFL Logo" 
+             style="width: 120px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); margin-bottom: 1rem;">
+        <h1 style="color: white; font-size: 2.5rem; font-weight: 800; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+            🏈 Fantasy Football Analysis Dashboard
+        </h1>
+        <p style="color: rgba(255,255,255,0.9); font-size: 1.1rem; margin: 0.5rem 0 0 0;">
+            Professional NFL Fantasy Football Analytics & Insights
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Load data with progress indicator
     with st.spinner('🔄 Loading fantasy football data...'):
@@ -720,8 +732,16 @@ def main():
     # Week filter
     selected_weeks = create_week_filter()
     
-    # Sidebar for navigation
-    st.sidebar.title("Navigation")
+    # Sidebar for navigation with NFL branding
+    st.sidebar.markdown("""
+    <div style="text-align: center; margin-bottom: 1rem;">
+        <img src="https://upload.wikimedia.org/wikipedia/en/a/a2/National_Football_League_logo.svg" 
+             alt="NFL Logo" 
+             style="width: 60px; height: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.sidebar.markdown('<h3 style="text-align: center; color: #1e3a8a; margin-bottom: 1rem;">Navigation</h3>', unsafe_allow_html=True)
     page = st.sidebar.selectbox(
         "Choose a page:",
         ["Overview", "Position Analysis", "Weekly Trends", "Consistency Analysis", "About"]
@@ -928,7 +948,12 @@ def show_about():
     
     st.markdown("""
     <div class="metric-card">
-        <h3 style="color: #1e3a8a; margin-bottom: 1rem;">🏈 Fantasy Football Analysis Dashboard</h3>
+        <div style="text-align: center; margin-bottom: 1rem;">
+            <img src="https://upload.wikimedia.org/wikipedia/en/a/a2/National_Football_League_logo.svg" 
+                 alt="NFL Logo" 
+                 style="width: 80px; height: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); margin-bottom: 0.5rem;">
+        </div>
+        <h3 style="color: #1e3a8a; margin-bottom: 1rem; text-align: center;">🏈 Fantasy Football Analysis Dashboard</h3>
         
         <p style="font-size: 1.1rem; color: #374151; margin-bottom: 1.5rem;">
             This interactive dashboard provides comprehensive analysis of fantasy football data from FantasyPros.
