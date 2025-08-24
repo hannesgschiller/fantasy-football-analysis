@@ -28,27 +28,164 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
+# Custom CSS for modern design
 st.markdown("""
 <style>
+    /* Modern color scheme */
+    :root {
+        --primary-color: #1e3a8a;
+        --secondary-color: #3b82f6;
+        --accent-color: #f59e0b;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --error-color: #ef4444;
+        --background-color: #f8fafc;
+        --card-background: #ffffff;
+        --text-primary: #1f2937;
+        --text-secondary: #6b7280;
+    }
+    
+    /* Main header styling */
     .main-header {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #1f77b4;
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         text-align: center;
         margin-bottom: 2rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    
+    /* Metric cards with modern design */
     .metric-card {
-        background-color: #f0f2f6;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        border-left: 4px solid #1f77b4;
-    }
-    .week-filter {
-        background-color: #e8f4fd;
-        padding: 1rem;
-        border-radius: 0.5rem;
+        background: linear-gradient(135deg, var(--card-background), #f1f5f9);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s ease;
         margin-bottom: 1rem;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Week filter styling */
+    .week-filter {
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #93c5fd;
+        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
+    }
+    
+    /* Section headers */
+    .section-header {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid var(--secondary-color);
+    }
+    
+    /* Subsection headers */
+    .subsection-header {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        padding-left: 0.5rem;
+        border-left: 4px solid var(--accent-color);
+    }
+    
+    /* Info boxes */
+    .info-box {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid #6ee7b7;
+        margin-bottom: 1rem;
+    }
+    
+    /* Warning boxes */
+    .warning-box {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid #f59e0b;
+        margin-bottom: 1rem;
+    }
+    
+    /* Success boxes */
+    .success-box {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid #10b981;
+        margin-bottom: 1rem;
+    }
+    
+    /* Chart containers */
+    .chart-container {
+        background: var(--card-background);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Data table styling */
+    .data-table {
+        background: var(--card-background);
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Sidebar styling */
+    .css-1d391kg {
+        background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+    }
+    
+    /* Button styling */
+    .stButton > button {
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Selectbox styling */
+    .stSelectbox > div > div {
+        border-radius: 0.5rem;
+        border: 2px solid #e2e8f0;
+    }
+    
+    /* Slider styling */
+    .stSlider > div > div > div > div {
+        background: var(--secondary-color);
+    }
+    
+    /* Overall page background */
+    .main .block-container {
+        background: var(--background-color);
+        padding-top: 2rem;
+        padding-bottom: 2rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -71,18 +208,34 @@ def load_data():
     
     # If no data path found, use sample data
     if data_path is None:
-        st.info("📊 Using sample data for demonstration. To use real data, add your fantasy football data files to the project.")
+        st.markdown("""
+        <div class="info-box">
+            <strong>📊 Using sample data for demonstration.</strong> To use real data, add your fantasy football data files to the project.
+        </div>
+        """, unsafe_allow_html=True)
         return create_sample_data()
     
     try:
         analyzer = FantasyFootballAnalyzer(data_path)
         analyzer.load_weekly_data()
         analyzer.load_season_data()
-        st.success(f"✅ Loaded data from: {data_path}")
+        st.markdown(f"""
+        <div class="success-box">
+            <strong>✅ Loaded data from:</strong> {data_path}
+        </div>
+        """, unsafe_allow_html=True)
         return analyzer
     except Exception as e:
-        st.warning(f"⚠️ Error loading data from {data_path}: {str(e)}")
-        st.info("📊 Falling back to sample data for demonstration.")
+        st.markdown(f"""
+        <div class="warning-box">
+            <strong>⚠️ Error loading data from {data_path}:</strong> {str(e)}
+        </div>
+        """, unsafe_allow_html=True)
+        st.markdown("""
+        <div class="info-box">
+            <strong>📊 Falling back to sample data for demonstration.</strong>
+        </div>
+        """, unsafe_allow_html=True)
         return create_sample_data()
 
 def create_sample_data():
@@ -337,7 +490,7 @@ def create_week_filter():
     return selected_weeks
 
 def create_top_performers_chart(df, position, title, selected_weeks=None):
-    """Create a horizontal bar chart for top performers"""
+    """Create a horizontal bar chart for top performers with modern styling"""
     if df is None or df.empty:
         return go.Figure()
     
@@ -355,14 +508,28 @@ def create_top_performers_chart(df, position, title, selected_weeks=None):
         values = df['FPTS']
         value_label = "Fantasy Points"
     
+    # Modern color scheme based on position
+    position_colors = {
+        'QB': ['#1e3a8a', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe'],
+        'RB': ['#059669', '#10b981', '#34d399', '#6ee7b7', '#a7f3d0'],
+        'WR': ['#dc2626', '#ef4444', '#f87171', '#fca5a5', '#fecaca'],
+        'TE': ['#7c3aed', '#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe']
+    }
+    
+    colors = position_colors.get(position, ['#3b82f6'] * len(values))
+    
     fig = go.Figure(data=[
         go.Bar(
             x=values,
             y=players,
             orientation='h',
-            marker_color='#1f77b4',
+            marker_color=colors,
             text=[f"{val:.1f}" for val in values],
             textposition='auto',
+            textfont=dict(size=12, color='white'),
+            marker=dict(
+                line=dict(width=1, color='rgba(255,255,255,0.3)')
+            )
         )
     ])
     
@@ -374,47 +541,81 @@ def create_top_performers_chart(df, position, title, selected_weeks=None):
             title += f" - {len(selected_weeks)} weeks"
     
     fig.update_layout(
-        title=title,
-        xaxis_title=value_label,
-        yaxis_title="Players",
-        height=400,
+        title=dict(
+            text=title,
+            font=dict(size=18, color='#1e3a8a'),
+            x=0.5
+        ),
+        xaxis_title=dict(
+            text=value_label,
+            font=dict(size=14, color='#6b7280')
+        ),
+        yaxis_title=dict(
+            text="Players",
+            font=dict(size=14, color='#6b7280')
+        ),
+        height=450,
         showlegend=False,
-        yaxis={'categoryorder': 'total ascending'}
+        yaxis={'categoryorder': 'total ascending'},
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=20, r=20, t=60, b=20)
     )
     
     return fig
 
 def create_consistency_chart(consistency_df, position):
-    """Create consistency analysis chart"""
+    """Create consistency analysis chart with modern styling"""
     if consistency_df.empty:
         return go.Figure()
     
     top_10 = consistency_df.head(10)
+    
+    # Modern color scheme for consistency
+    colors = ['#059669', '#10b981', '#34d399', '#6ee7b7', '#a7f3d0', 
+              '#d1fae5', '#ecfdf5', '#f0fdf4', '#f7fee7', '#fefce8']
     
     fig = go.Figure(data=[
         go.Bar(
             x=top_10['Consistency_Score'],
             y=top_10['Player'],
             orientation='h',
-            marker_color='#2ca02c',
+            marker_color=colors[:len(top_10)],
             text=[f"{val:.2f}" for val in top_10['Consistency_Score']],
             textposition='auto',
+            textfont=dict(size=12, color='white'),
+            marker=dict(
+                line=dict(width=1, color='rgba(255,255,255,0.3)')
+            )
         )
     ])
     
     fig.update_layout(
-        title=f'Most Consistent {position}s',
-        xaxis_title="Consistency Score (Higher = More Consistent)",
-        yaxis_title="Players",
-        height=400,
+        title=dict(
+            text=f'🎯 Most Consistent {position}s',
+            font=dict(size=18, color='#1e3a8a'),
+            x=0.5
+        ),
+        xaxis_title=dict(
+            text="Consistency Score (Higher = More Consistent)",
+            font=dict(size=14, color='#6b7280')
+        ),
+        yaxis_title=dict(
+            text="Players",
+            font=dict(size=14, color='#6b7280')
+        ),
+        height=450,
         showlegend=False,
-        yaxis={'categoryorder': 'total ascending'}
+        yaxis={'categoryorder': 'total ascending'},
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=20, r=20, t=60, b=20)
     )
     
     return fig
 
 def create_weekly_trends_chart(analyzer, position, top_n=5, selected_weeks=None):
-    """Create weekly trends chart for top players"""
+    """Create weekly trends chart for top players with modern styling"""
     # Get top players for the season
     season_top = analyzer.get_top_performers(position, week=None, top_n=top_n)
     if season_top is None:
@@ -441,20 +642,26 @@ def create_weekly_trends_chart(analyzer, position, top_n=5, selected_weeks=None)
                 else:
                     weekly_performance[player].append(0)
     
-    # Create the plot
+    # Create the plot with modern styling
     fig = go.Figure()
     
-    for player, performance in weekly_performance.items():
+    # Modern color palette for lines
+    colors = ['#1e3a8a', '#059669', '#dc2626', '#7c3aed', '#ea580c', 
+              '#0891b2', '#be185d', '#65a30d', '#9333ea', '#c2410c']
+    
+    for i, (player, performance) in enumerate(weekly_performance.items()):
         fig.add_trace(go.Scatter(
             x=list(range(1, len(performance) + 1)),
             y=performance,
             mode='lines+markers',
             name=player,
-            line=dict(width=2)
+            line=dict(width=3, color=colors[i % len(colors)]),
+            marker=dict(size=6, color=colors[i % len(colors)]),
+            hovertemplate=f'<b>{player}</b><br>Week %{{x}}<br>FPTS: %{{y:.1f}}<extra></extra>'
         ))
     
     # Add week info to title if filtering
-    title = f'{position} Weekly Performance Trends - Top {top_n} Season Performers'
+    title = f'📈 {position} Weekly Performance Trends - Top {top_n} Season Performers'
     if selected_weeks and len(selected_weeks) < 18:
         if len(selected_weeks) == 1:
             title += f" ({selected_weeks[0]})"
@@ -462,11 +669,29 @@ def create_weekly_trends_chart(analyzer, position, top_n=5, selected_weeks=None)
             title += f" ({len(selected_weeks)} weeks)"
     
     fig.update_layout(
-        title=title,
-        xaxis_title='Week',
-        yaxis_title='Fantasy Points',
-        height=400,
-        hovermode='x unified'
+        title=dict(
+            text=title,
+            font=dict(size=18, color='#1e3a8a'),
+            x=0.5
+        ),
+        xaxis_title=dict(
+            text='Week',
+            font=dict(size=14, color='#6b7280')
+        ),
+        yaxis_title=dict(
+            text='Fantasy Points',
+            font=dict(size=14, color='#6b7280')
+        ),
+        height=450,
+        hovermode='x unified',
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=20, r=20, t=60, b=20),
+        legend=dict(
+            bgcolor='rgba(255,255,255,0.8)',
+            bordercolor='rgba(0,0,0,0.1)',
+            borderwidth=1
+        )
     )
     
     return fig
@@ -474,19 +699,23 @@ def create_weekly_trends_chart(analyzer, position, top_n=5, selected_weeks=None)
 def main():
     """Main dashboard function"""
     
-    # Header
+    # Header with modern styling
     st.markdown('<h1 class="main-header">🏈 Fantasy Football Analysis Dashboard</h1>', unsafe_allow_html=True)
     
     # Load data with progress indicator
-    with st.spinner('Loading fantasy football data...'):
+    with st.spinner('🔄 Loading fantasy football data...'):
         analyzer = load_data()
     
-    # Debug: Show available weeks
+    # Debug: Show available weeks with modern styling
     if hasattr(analyzer, 'weekly_data'):
         available_weeks = sorted(analyzer.weekly_data.keys())
-        st.info(f"📊 Available weeks: {len(available_weeks)} weeks - {', '.join(available_weeks[:5])}{'...' if len(available_weeks) > 5 else ''}")
+        st.markdown(f"""
+        <div class="info-box">
+            <strong>📊 Data Overview:</strong> {len(available_weeks)} weeks available - {', '.join(available_weeks[:5])}{'...' if len(available_weeks) > 5 else ''}
+        </div>
+        """, unsafe_allow_html=True)
     
-    st.success("✅ Data loaded successfully!")
+    st.markdown('<div class="success-box"><strong>✅ Data loaded successfully!</strong></div>', unsafe_allow_html=True)
     
     # Week filter
     selected_weeks = create_week_filter()
@@ -511,9 +740,10 @@ def main():
 
 def show_overview(analyzer, selected_weeks):
     """Show overview page"""
-    st.header("📊 Season Overview")
+    st.markdown('<h2 class="section-header">📊 Season Overview</h2>', unsafe_allow_html=True)
     
-    # Key metrics
+    # Key metrics with modern styling
+    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
@@ -522,56 +752,58 @@ def show_overview(analyzer, selected_weeks):
             qb_data = get_filtered_data(analyzer, selected_weeks, 'QB')
             if qb_data is not None and not qb_data.empty:
                 top_qb = qb_data.iloc[0]
-                st.metric("Top QB", f"{top_qb['Player'].split(' (')[0]}", f"{top_qb['Total_FPTS']:.1f} pts")
+                st.metric("🏈 Top QB", f"{top_qb['Player'].split(' (')[0]}", f"{top_qb['Total_FPTS']:.1f} pts")
             else:
-                st.metric("Top QB", "N/A", "No data")
+                st.metric("🏈 Top QB", "N/A", "No data")
         else:
             # Use season data
             qb_top = analyzer.get_top_performers('QB', week=None, top_n=1)
             if qb_top is not None:
-                st.metric("Top QB", f"{qb_top.iloc[0]['Player'].split(' (')[0]}", f"{qb_top.iloc[0]['FPTS']:.1f} pts")
+                st.metric("🏈 Top QB", f"{qb_top.iloc[0]['Player'].split(' (')[0]}", f"{qb_top.iloc[0]['FPTS']:.1f} pts")
     
     with col2:
         if selected_weeks and len(selected_weeks) < 18:
             rb_data = get_filtered_data(analyzer, selected_weeks, 'RB')
             if rb_data is not None and not rb_data.empty:
                 top_rb = rb_data.iloc[0]
-                st.metric("Top RB", f"{top_rb['Player'].split(' (')[0]}", f"{top_rb['Total_FPTS']:.1f} pts")
+                st.metric("🏃‍♂️ Top RB", f"{top_rb['Player'].split(' (')[0]}", f"{top_rb['Total_FPTS']:.1f} pts")
             else:
-                st.metric("Top RB", "N/A", "No data")
+                st.metric("🏃‍♂️ Top RB", "N/A", "No data")
         else:
             rb_top = analyzer.get_top_performers('RB', week=None, top_n=1)
             if rb_top is not None:
-                st.metric("Top RB", f"{rb_top.iloc[0]['Player'].split(' (')[0]}", f"{rb_top.iloc[0]['FPTS']:.1f} pts")
+                st.metric("🏃‍♂️ Top RB", f"{rb_top.iloc[0]['Player'].split(' (')[0]}", f"{rb_top.iloc[0]['FPTS']:.1f} pts")
     
     with col3:
         if selected_weeks and len(selected_weeks) < 18:
             wr_data = get_filtered_data(analyzer, selected_weeks, 'WR')
             if wr_data is not None and not wr_data.empty:
                 top_wr = wr_data.iloc[0]
-                st.metric("Top WR", f"{top_wr['Player'].split(' (')[0]}", f"{top_wr['Total_FPTS']:.1f} pts")
+                st.metric("🎯 Top WR", f"{top_wr['Player'].split(' (')[0]}", f"{top_wr['Total_FPTS']:.1f} pts")
             else:
-                st.metric("Top WR", "N/A", "No data")
+                st.metric("🎯 Top WR", "N/A", "No data")
         else:
             wr_top = analyzer.get_top_performers('WR', week=None, top_n=1)
             if wr_top is not None:
-                st.metric("Top WR", f"{wr_top.iloc[0]['Player'].split(' (')[0]}", f"{wr_top.iloc[0]['FPTS']:.1f} pts")
+                st.metric("🎯 Top WR", f"{wr_top.iloc[0]['Player'].split(' (')[0]}", f"{wr_top.iloc[0]['FPTS']:.1f} pts")
     
     with col4:
         if selected_weeks and len(selected_weeks) < 18:
             te_data = get_filtered_data(analyzer, selected_weeks, 'TE')
             if te_data is not None and not te_data.empty:
                 top_te = te_data.iloc[0]
-                st.metric("Top TE", f"{top_te['Player'].split(' (')[0]}", f"{top_te['Total_FPTS']:.1f} pts")
+                st.metric("🎪 Top TE", f"{top_te['Player'].split(' (')[0]}", f"{top_te['Total_FPTS']:.1f} pts")
             else:
-                st.metric("Top TE", "N/A", "No data")
+                st.metric("🎪 Top TE", "N/A", "No data")
         else:
             te_top = analyzer.get_top_performers('TE', week=None, top_n=1)
             if te_top is not None:
-                st.metric("Top TE", f"{te_top.iloc[0]['Player'].split(' (')[0]}", f"{te_top.iloc[0]['FPTS']:.1f} pts")
+                st.metric("🎪 Top TE", f"{te_top.iloc[0]['Player'].split(' (')[0]}", f"{te_top.iloc[0]['FPTS']:.1f} pts")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
     
     # Top performers by position
-    st.subheader("Top Performers by Position")
+    st.markdown('<h3 class="subsection-header">🏆 Top Performers by Position</h3>', unsafe_allow_html=True)
     
     tabs = st.tabs(["QB", "RB", "WR", "TE"])
     
@@ -600,12 +832,12 @@ def show_overview(analyzer, selected_weeks):
 
 def show_position_analysis(analyzer, selected_weeks):
     """Show position-specific analysis"""
-    st.header("🎯 Position Analysis")
+    st.markdown('<h2 class="section-header">🎯 Position Analysis</h2>', unsafe_allow_html=True)
     
     position = st.selectbox("Select Position:", ['QB', 'RB', 'WR', 'TE'])
     
     # Top performers
-    st.subheader(f"Top 10 {position}s")
+    st.markdown(f'<h3 class="subsection-header">🏆 Top 10 {position}s</h3>', unsafe_allow_html=True)
     
     if selected_weeks and len(selected_weeks) < 18:
         # Use filtered data
@@ -628,7 +860,7 @@ def show_position_analysis(analyzer, selected_weeks):
 
 def show_weekly_trends(analyzer, selected_weeks):
     """Show weekly trends analysis"""
-    st.header("📈 Weekly Trends")
+    st.markdown('<h2 class="section-header">📈 Weekly Trends</h2>', unsafe_allow_html=True)
     
     position = st.selectbox("Select Position:", ['QB', 'RB', 'WR', 'TE'])
     top_n = st.slider("Number of top players to show:", 3, 10, 5)
@@ -649,7 +881,7 @@ def show_weekly_trends(analyzer, selected_weeks):
 
 def show_consistency_analysis(analyzer, selected_weeks):
     """Show consistency analysis"""
-    st.header("🎯 Consistency Analysis")
+    st.markdown('<h2 class="section-header">🎯 Consistency Analysis</h2>', unsafe_allow_html=True)
     
     position = st.selectbox("Select Position:", ['QB', 'RB', 'WR', 'TE'])
     min_games = st.slider("Minimum games played:", 3, 10, 5)
@@ -657,7 +889,11 @@ def show_consistency_analysis(analyzer, selected_weeks):
     # Note: Consistency analysis works best with full season data
     # For filtered weeks, we'll show a note
     if selected_weeks and len(selected_weeks) < 18:
-        st.info(f"📝 Note: Consistency analysis is shown for the full season. You're currently filtering {len(selected_weeks)} weeks.")
+        st.markdown(f"""
+        <div class="warning-box">
+            <strong>📝 Note:</strong> Consistency analysis is shown for the full season. You're currently filtering {len(selected_weeks)} weeks.
+        </div>
+        """, unsafe_allow_html=True)
     
     consistency = analyzer.get_consistency_analysis(position, min_games=min_games)
     
@@ -688,36 +924,52 @@ def show_consistency_analysis(analyzer, selected_weeks):
 
 def show_about():
     """Show about page"""
-    st.header("ℹ️ About This Dashboard")
+    st.markdown('<h2 class="section-header">ℹ️ About This Dashboard</h2>', unsafe_allow_html=True)
     
     st.markdown("""
-    ## Fantasy Football Analysis Dashboard
-    
-    This interactive dashboard provides comprehensive analysis of fantasy football data from FantasyPros.
-    
-    ### Features:
-    - **Season Overview**: Top performers and position comparisons
-    - **Position Analysis**: Detailed analysis for each position (QB, RB, WR, TE)
-    - **Weekly Trends**: Track player performance over time
-    - **Consistency Analysis**: Identify reliable players
-    - **Week Filtering**: Analyze specific weeks or week ranges
-    
-    ### Technology:
-    - Built with Streamlit
-    - Interactive Plotly charts
-    - Real-time data analysis
-    - Advanced filtering capabilities
-    
-    ### Deployment:
-    This dashboard is designed to be deployed on Streamlit Cloud or any web hosting service.
-    
-    ### Author:
-    Professional fantasy football analysis tool for data-driven decision making.
-    """)
+    <div class="metric-card">
+        <h3 style="color: #1e3a8a; margin-bottom: 1rem;">🏈 Fantasy Football Analysis Dashboard</h3>
+        
+        <p style="font-size: 1.1rem; color: #374151; margin-bottom: 1.5rem;">
+            This interactive dashboard provides comprehensive analysis of fantasy football data from FantasyPros.
+        </p>
+        
+        <h4 style="color: #059669; margin-bottom: 0.5rem;">✨ Features:</h4>
+        <ul style="color: #6b7280; margin-bottom: 1.5rem;">
+            <li><strong>Season Overview:</strong> Top performers and position comparisons</li>
+            <li><strong>Position Analysis:</strong> Detailed analysis for each position (QB, RB, WR, TE)</li>
+            <li><strong>Weekly Trends:</strong> Track player performance over time</li>
+            <li><strong>Consistency Analysis:</strong> Identify reliable players</li>
+            <li><strong>Week Filtering:</strong> Analyze specific weeks or week ranges</li>
+        </ul>
+        
+        <h4 style="color: #059669; margin-bottom: 0.5rem;">🛠️ Technology:</h4>
+        <ul style="color: #6b7280; margin-bottom: 1.5rem;">
+            <li>Built with <strong>Streamlit</strong></li>
+            <li>Interactive <strong>Plotly</strong> charts</li>
+            <li>Real-time data analysis</li>
+            <li>Advanced filtering capabilities</li>
+        </ul>
+        
+        <h4 style="color: #059669; margin-bottom: 0.5rem;">🚀 Deployment:</h4>
+        <p style="color: #6b7280; margin-bottom: 1.5rem;">
+            This dashboard is designed to be deployed on Streamlit Cloud or any web hosting service.
+        </p>
+        
+        <h4 style="color: #059669; margin-bottom: 0.5rem;">👨‍💻 Author:</h4>
+        <p style="color: #6b7280;">
+            Professional fantasy football analysis tool for data-driven decision making.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.markdown("---")
-    st.markdown("**GitHub Repository**: [Add your GitHub link here]")
-    st.markdown("**Contact**: [Add your contact information here]")
+    st.markdown("""
+    <div class="info-box">
+        <strong>🔗 GitHub Repository:</strong> <a href="https://github.com/hannesgschiller/fantasy-football-analysis" target="_blank">fantasy-football-analysis</a><br>
+        <strong>📧 Contact:</strong> [Add your contact information here]
+    </div>
+    """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main() 
