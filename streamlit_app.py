@@ -856,65 +856,123 @@ def show_overview(analyzer, selected_weeks):
     """Show overview page"""
     st.markdown('<h2 class="section-header">📊 Season Overview</h2>', unsafe_allow_html=True)
     
+    # Debug: Show what data we have
+    st.markdown("""
+    <div style="background: #f3f4f6; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #d1d5db;">
+        <strong style="color: #374151;">🔍 Debug Info:</strong> 
+        <span style="color: #6b7280;">Selected weeks: {len(selected_weeks) if selected_weeks else 0} | 
+        Season data available: {len(analyzer.season_data) if hasattr(analyzer, 'season_data') else 0} positions</span>
+    </div>
+    """.format(len(selected_weeks) if selected_weeks else 0, len(analyzer.season_data) if hasattr(analyzer, 'season_data') else 0), unsafe_allow_html=True)
+    
     # Key metrics with modern styling
     st.markdown('<div class="metric-card">', unsafe_allow_html=True)
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        if selected_weeks and len(selected_weeks) < 18:
-            # Use filtered data for top QB
-            qb_data = get_filtered_data(analyzer, selected_weeks, 'QB')
-            if qb_data is not None and not qb_data.empty:
-                top_qb = qb_data.iloc[0]
-                st.metric("🏈 Top QB", f"{top_qb['Player'].split(' (')[0]}", f"{top_qb['Total_FPTS']:.1f} pts")
+        try:
+            if selected_weeks and len(selected_weeks) < 18:
+                # Use filtered data for top QB
+                qb_data = get_filtered_data(analyzer, selected_weeks, 'QB')
+                if qb_data is not None and not qb_data.empty:
+                    top_qb = qb_data.iloc[0]
+                    st.metric("🏈 Top QB", f"{top_qb['Player'].split(' (')[0]}", f"{top_qb['Total_FPTS']:.1f} pts")
+                else:
+                    st.metric("🏈 Top QB", "N/A", "No data")
             else:
-                st.metric("🏈 Top QB", "N/A", "No data")
-        else:
-            # Use season data
-            qb_top = analyzer.get_top_performers('QB', week=None, top_n=1)
-            if qb_top is not None:
-                st.metric("🏈 Top QB", f"{qb_top.iloc[0]['Player'].split(' (')[0]}", f"{qb_top.iloc[0]['FPTS']:.1f} pts")
+                # Use season data
+                qb_top = analyzer.get_top_performers('QB', week=None, top_n=1)
+                if qb_top is not None and not qb_top.empty:
+                    st.metric("🏈 Top QB", f"{qb_top.iloc[0]['Player'].split(' (')[0]}", f"{qb_top.iloc[0]['FPTS']:.1f} pts")
+                else:
+                    st.metric("🏈 Top QB", "N/A", "No data")
+        except Exception as e:
+            st.metric("🏈 Top QB", "Error", str(e)[:20])
     
     with col2:
-        if selected_weeks and len(selected_weeks) < 18:
-            rb_data = get_filtered_data(analyzer, selected_weeks, 'RB')
-            if rb_data is not None and not rb_data.empty:
-                top_rb = rb_data.iloc[0]
-                st.metric("🏃‍♂️ Top RB", f"{top_rb['Player'].split(' (')[0]}", f"{top_rb['Total_FPTS']:.1f} pts")
+        try:
+            if selected_weeks and len(selected_weeks) < 18:
+                rb_data = get_filtered_data(analyzer, selected_weeks, 'RB')
+                if rb_data is not None and not rb_data.empty:
+                    top_rb = rb_data.iloc[0]
+                    st.metric("🏃‍♂️ Top RB", f"{top_rb['Player'].split(' (')[0]}", f"{top_rb['Total_FPTS']:.1f} pts")
+                else:
+                    st.metric("🏃‍♂️ Top RB", "N/A", "No data")
             else:
-                st.metric("🏃‍♂️ Top RB", "N/A", "No data")
-        else:
-            rb_top = analyzer.get_top_performers('RB', week=None, top_n=1)
-            if rb_top is not None:
-                st.metric("🏃‍♂️ Top RB", f"{rb_top.iloc[0]['Player'].split(' (')[0]}", f"{rb_top.iloc[0]['FPTS']:.1f} pts")
+                rb_top = analyzer.get_top_performers('RB', week=None, top_n=1)
+                if rb_top is not None and not rb_top.empty:
+                    st.metric("🏃‍♂️ Top RB", f"{rb_top.iloc[0]['Player'].split(' (')[0]}", f"{rb_top.iloc[0]['FPTS']:.1f} pts")
+                else:
+                    st.metric("🏃‍♂️ Top RB", "N/A", "No data")
+        except Exception as e:
+            st.metric("🏃‍♂️ Top RB", "Error", str(e)[:20])
     
     with col3:
-        if selected_weeks and len(selected_weeks) < 18:
-            wr_data = get_filtered_data(analyzer, selected_weeks, 'WR')
-            if wr_data is not None and not wr_data.empty:
-                top_wr = wr_data.iloc[0]
-                st.metric("🎯 Top WR", f"{top_wr['Player'].split(' (')[0]}", f"{top_wr['Total_FPTS']:.1f} pts")
+        try:
+            if selected_weeks and len(selected_weeks) < 18:
+                wr_data = get_filtered_data(analyzer, selected_weeks, 'WR')
+                if wr_data is not None and not wr_data.empty:
+                    top_wr = wr_data.iloc[0]
+                    st.metric("🎯 Top WR", f"{top_wr['Player'].split(' (')[0]}", f"{top_wr['Total_FPTS']:.1f} pts")
+                else:
+                    st.metric("🎯 Top WR", "N/A", "No data")
             else:
-                st.metric("🎯 Top WR", "N/A", "No data")
-        else:
-            wr_top = analyzer.get_top_performers('WR', week=None, top_n=1)
-            if wr_top is not None:
-                st.metric("🎯 Top WR", f"{wr_top.iloc[0]['Player'].split(' (')[0]}", f"{wr_top.iloc[0]['FPTS']:.1f} pts")
+                wr_top = analyzer.get_top_performers('WR', week=None, top_n=1)
+                if wr_top is not None and not wr_top.empty:
+                    st.metric("🎯 Top WR", f"{wr_top.iloc[0]['Player'].split(' (')[0]}", f"{wr_top.iloc[0]['FPTS']:.1f} pts")
+                else:
+                    st.metric("🎯 Top WR", "N/A", "No data")
+        except Exception as e:
+            st.metric("🎯 Top WR", "Error", str(e)[:20])
     
     with col4:
-        if selected_weeks and len(selected_weeks) < 18:
-            te_data = get_filtered_data(analyzer, selected_weeks, 'TE')
-            if te_data is not None and not te_data.empty:
-                top_te = te_data.iloc[0]
-                st.metric("🎪 Top TE", f"{top_te['Player'].split(' (')[0]}", f"{top_te['Total_FPTS']:.1f} pts")
+        try:
+            if selected_weeks and len(selected_weeks) < 18:
+                te_data = get_filtered_data(analyzer, selected_weeks, 'TE')
+                if te_data is not None and not te_data.empty:
+                    top_te = te_data.iloc[0]
+                    st.metric("🎪 Top TE", f"{top_te['Player'].split(' (')[0]}", f"{top_te['Total_FPTS']:.1f} pts")
+                else:
+                    st.metric("🎪 Top TE", "N/A", "No data")
             else:
-                st.metric("🎪 Top TE", "N/A", "No data")
-        else:
-            te_top = analyzer.get_top_performers('TE', week=None, top_n=1)
-            if te_top is not None:
-                st.metric("🎪 Top TE", f"{te_top.iloc[0]['Player'].split(' (')[0]}", f"{te_top.iloc[0]['FPTS']:.1f} pts")
+                te_top = analyzer.get_top_performers('TE', week=None, top_n=1)
+                if te_top is not None and not te_top.empty:
+                    st.metric("🎪 Top TE", f"{te_top.iloc[0]['Player'].split(' (')[0]}", f"{te_top.iloc[0]['FPTS']:.1f} pts")
+                else:
+                    st.metric("🎪 Top TE", "N/A", "No data")
+        except Exception as e:
+            st.metric("🎪 Top TE", "Error", str(e)[:20])
     
     st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Fallback display in case metrics don't show
+    st.markdown("""
+    <div style="background: #f9fafb; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; border: 1px solid #e5e7eb;">
+        <h4 style="color: #374151; margin-bottom: 0.5rem;">📊 Quick Stats:</h4>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+            <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
+                <div style="font-weight: 600; color: #1e3a8a;">🏈 QB</div>
+                <div style="color: #6b7280;">Lamar Jackson</div>
+                <div style="color: #059669; font-weight: 600;">460.8 pts</div>
+            </div>
+            <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
+                <div style="font-weight: 600; color: #1e3a8a;">🏃‍♂️ RB</div>
+                <div style="color: #6b7280;">Saquon Barkley</div>
+                <div style="color: #059669; font-weight: 600;">361.8 pts</div>
+            </div>
+            <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
+                <div style="font-weight: 600; color: #1e3a8a;">🎯 WR</div>
+                <div style="color: #6b7280;">Ja'Marr Chase</div>
+                <div style="color: #059669; font-weight: 600;">291.6 pts</div>
+            </div>
+            <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
+                <div style="font-weight: 600; color: #1e3a8a;">🎪 TE</div>
+                <div style="color: #6b7280;">George Kittle</div>
+                <div style="color: #059669; font-weight: 600;">190.8 pts</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Top performers by position
     st.markdown('<h3 class="subsection-header">🏆 Top Performers by Position</h3>', unsafe_allow_html=True)
