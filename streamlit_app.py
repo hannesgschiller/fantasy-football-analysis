@@ -28,6 +28,21 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Set theme to light mode
+st.markdown("""
+<style>
+    .stApp {
+        color-scheme: light;
+    }
+    .stApp > header {
+        background-color: transparent;
+    }
+    .stApp > div {
+        background-color: #ffffff;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Custom CSS for modern design
 st.markdown("""
 <style>
@@ -224,16 +239,40 @@ st.markdown("""
     
     .stMetric > div > div > div {
         color: #1f2937 !important;
+        font-size: 0.9rem !important;
+        line-height: 1.2 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
     }
     
     .stMetric label {
         color: #374151 !important;
         font-weight: 600 !important;
+        font-size: 0.8rem !important;
     }
     
     .stMetric [data-testid="metric-container"] {
         background: #ffffff !important;
         color: #1f2937 !important;
+    }
+    
+    /* Fix metric value text size */
+    .stMetric [data-testid="metric-value"] {
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+    }
+    
+    /* Fix metric label text size */
+    .stMetric [data-testid="metric-label"] {
+        font-size: 0.85rem !important;
+        font-weight: 600 !important;
+        color: #374151 !important;
+    }
+    
+    /* Fix metric delta text size */
+    .stMetric [data-testid="metric-delta"] {
+        font-size: 0.8rem !important;
     }
     
     /* Ensure tabs are readable */
@@ -272,37 +311,14 @@ def load_data():
     
     # If no data path found, use sample data
     if data_path is None:
-        st.markdown("""
-        <div class="info-box">
-            <strong style="color: #475569;">📊 Using sample data for demonstration.</strong> 
-            <span style="color: #64748b;">To use real data, add your fantasy football data files to the project.</span>
-        </div>
-        """, unsafe_allow_html=True)
         return create_sample_data()
     
     try:
         analyzer = FantasyFootballAnalyzer(data_path)
         analyzer.load_weekly_data()
         analyzer.load_season_data()
-        st.markdown(f"""
-        <div class="success-box">
-            <strong style="color: #166534;">✅ Loaded data from:</strong> 
-            <span style="color: #374151;">{data_path}</span>
-        </div>
-        """, unsafe_allow_html=True)
         return analyzer
     except Exception as e:
-        st.markdown(f"""
-        <div class="warning-box">
-            <strong style="color: #92400e;">⚠️ Error loading data from {data_path}:</strong> 
-            <span style="color: #1f2937;">{str(e)}</span>
-        </div>
-        """, unsafe_allow_html=True)
-        st.markdown("""
-        <div class="info-box">
-            <strong style="color: #065f46;">📊 Falling back to sample data for demonstration.</strong>
-        </div>
-        """, unsafe_allow_html=True)
         return create_sample_data()
 
 def create_sample_data():
@@ -792,14 +808,14 @@ def main():
     
     # Header with NFL logo and modern styling
     st.markdown("""
-    <div style="text-align: center; background: linear-gradient(135deg, #1e3a8a, #3b82f6); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+    <div style="text-align: center; background: linear-gradient(135deg, #f8fafc, #e2e8f0); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
         <img src="https://upload.wikimedia.org/wikipedia/en/a/a2/National_Football_League_logo.svg" 
              alt="NFL Logo" 
-             style="width: 120px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); margin-bottom: 1rem;">
-        <h1 style="color: white; font-size: 2.5rem; font-weight: 800; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+             style="width: 120px; height: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); margin-bottom: 1rem;">
+        <h1 style="color: #1e293b; font-size: 2.5rem; font-weight: 800; margin: 0;">
             🏈 Fantasy Football Analysis Dashboard
         </h1>
-        <p style="color: white; font-size: 1.1rem; margin: 0.5rem 0 0 0; font-weight: 500;">
+        <p style="color: #475569; font-size: 1.1rem; margin: 0.5rem 0 0 0; font-weight: 500;">
             Professional NFL Fantasy Football Analytics & Insights
         </p>
     </div>
@@ -809,17 +825,6 @@ def main():
     with st.spinner('🔄 Loading fantasy football data...'):
         analyzer = load_data()
     
-    # Debug: Show available weeks with modern styling
-    if hasattr(analyzer, 'weekly_data'):
-        available_weeks = sorted(analyzer.weekly_data.keys())
-        st.markdown(f"""
-        <div class="info-box">
-            <strong style="color: #065f46;">📊 Data Overview:</strong> 
-            <span style="color: #1f2937;">{len(available_weeks)} weeks available - {', '.join(available_weeks[:5])}{'...' if len(available_weeks) > 5 else ''}</span>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown('<div class="success-box"><strong style="color: #065f46;">✅ Data loaded successfully!</strong></div>', unsafe_allow_html=True)
     
     # Week filter
     selected_weeks = create_week_filter()
@@ -833,7 +838,7 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    st.sidebar.markdown('<h3 style="text-align: center; color: #1e3a8a; margin-bottom: 1rem;">Navigation</h3>', unsafe_allow_html=True)
+    st.sidebar.markdown('<h3 style="text-align: center; color: #374151; margin-bottom: 1rem;">Navigation</h3>', unsafe_allow_html=True)
     page = st.sidebar.selectbox(
         "Choose a page:",
         ["Overview", "Position Analysis", "Weekly Trends", "Consistency Analysis", "About"]
@@ -885,18 +890,26 @@ def show_overview(analyzer, selected_weeks):
                 qb_data = get_filtered_data(analyzer, selected_weeks, 'QB')
                 if qb_data is not None and not qb_data.empty:
                     top_qb = qb_data.iloc[0]
-                    st.metric("🏈 Top QB", f"{top_qb['Player'].split(' (')[0]}", f"{top_qb['Total_FPTS']:.1f} pts")
+                    player_name = top_qb['Player'].split(' (')[0]
+                    # Truncate long names to fit better
+                    if len(player_name) > 15:
+                        player_name = player_name[:12] + "..."
+                    st.metric("🏈 #1 QB", player_name, f"{top_qb['Total_FPTS']:.1f} pts")
                 else:
-                    st.metric("🏈 Top QB", "N/A", "No data")
+                    st.metric("🏈 #1 QB", "N/A", "No data")
             else:
                 # Use season data
                 qb_top = analyzer.get_top_performers('QB', week=None, top_n=1)
                 if qb_top is not None and not qb_top.empty:
-                    st.metric("🏈 Top QB", f"{qb_top.iloc[0]['Player'].split(' (')[0]}", f"{qb_top.iloc[0]['FPTS']:.1f} pts")
+                    player_name = qb_top.iloc[0]['Player'].split(' (')[0]
+                    # Truncate long names to fit better
+                    if len(player_name) > 15:
+                        player_name = player_name[:12] + "..."
+                    st.metric("🏈 #1 QB", player_name, f"{qb_top.iloc[0]['FPTS']:.1f} pts")
                 else:
-                    st.metric("🏈 Top QB", "N/A", "No data")
+                    st.metric("🏈 #1 QB", "N/A", "No data")
         except Exception as e:
-            st.metric("🏈 Top QB", "Error", str(e)[:20])
+            st.metric("🏈 #1 QB", "Error", str(e)[:20])
     
     with col2:
         try:
@@ -904,17 +917,25 @@ def show_overview(analyzer, selected_weeks):
                 rb_data = get_filtered_data(analyzer, selected_weeks, 'RB')
                 if rb_data is not None and not rb_data.empty:
                     top_rb = rb_data.iloc[0]
-                    st.metric("🏃‍♂️ Top RB", f"{top_rb['Player'].split(' (')[0]}", f"{top_rb['Total_FPTS']:.1f} pts")
+                    player_name = top_rb['Player'].split(' (')[0]
+                    # Truncate long names to fit better
+                    if len(player_name) > 15:
+                        player_name = player_name[:12] + "..."
+                    st.metric("🏃‍♂️ #1 RB", player_name, f"{top_rb['Total_FPTS']:.1f} pts")
                 else:
-                    st.metric("🏃‍♂️ Top RB", "N/A", "No data")
+                    st.metric("🏃‍♂️ #1 RB", "N/A", "No data")
             else:
                 rb_top = analyzer.get_top_performers('RB', week=None, top_n=1)
                 if rb_top is not None and not rb_top.empty:
-                    st.metric("🏃‍♂️ Top RB", f"{rb_top.iloc[0]['Player'].split(' (')[0]}", f"{rb_top.iloc[0]['FPTS']:.1f} pts")
+                    player_name = rb_top.iloc[0]['Player'].split(' (')[0]
+                    # Truncate long names to fit better
+                    if len(player_name) > 15:
+                        player_name = player_name[:12] + "..."
+                    st.metric("🏃‍♂️ #1 RB", player_name, f"{rb_top.iloc[0]['FPTS']:.1f} pts")
                 else:
-                    st.metric("🏃‍♂️ Top RB", "N/A", "No data")
+                    st.metric("🏃‍♂️ #1 RB", "N/A", "No data")
         except Exception as e:
-            st.metric("🏃‍♂️ Top RB", "Error", str(e)[:20])
+            st.metric("🏃‍♂️ #1 RB", "Error", str(e)[:20])
     
     with col3:
         try:
@@ -922,17 +943,25 @@ def show_overview(analyzer, selected_weeks):
                 wr_data = get_filtered_data(analyzer, selected_weeks, 'WR')
                 if wr_data is not None and not wr_data.empty:
                     top_wr = wr_data.iloc[0]
-                    st.metric("🎯 Top WR", f"{top_wr['Player'].split(' (')[0]}", f"{top_wr['Total_FPTS']:.1f} pts")
+                    player_name = top_wr['Player'].split(' (')[0]
+                    # Truncate long names to fit better
+                    if len(player_name) > 15:
+                        player_name = player_name[:12] + "..."
+                    st.metric("🎯 #1 WR", player_name, f"{top_wr['Total_FPTS']:.1f} pts")
                 else:
-                    st.metric("🎯 Top WR", "N/A", "No data")
+                    st.metric("🎯 #1 WR", "N/A", "No data")
             else:
                 wr_top = analyzer.get_top_performers('WR', week=None, top_n=1)
                 if wr_top is not None and not wr_top.empty:
-                    st.metric("🎯 Top WR", f"{wr_top.iloc[0]['Player'].split(' (')[0]}", f"{wr_top.iloc[0]['FPTS']:.1f} pts")
+                    player_name = wr_top.iloc[0]['Player'].split(' (')[0]
+                    # Truncate long names to fit better
+                    if len(player_name) > 15:
+                        player_name = player_name[:12] + "..."
+                    st.metric("🎯 #1 WR", player_name, f"{wr_top.iloc[0]['FPTS']:.1f} pts")
                 else:
-                    st.metric("🎯 Top WR", "N/A", "No data")
+                    st.metric("🎯 #1 WR", "N/A", "No data")
         except Exception as e:
-            st.metric("🎯 Top WR", "Error", str(e)[:20])
+            st.metric("🎯 #1 WR", "Error", str(e)[:20])
     
     with col4:
         try:
@@ -940,44 +969,52 @@ def show_overview(analyzer, selected_weeks):
                 te_data = get_filtered_data(analyzer, selected_weeks, 'TE')
                 if te_data is not None and not te_data.empty:
                     top_te = te_data.iloc[0]
-                    st.metric("🎪 Top TE", f"{top_te['Player'].split(' (')[0]}", f"{top_te['Total_FPTS']:.1f} pts")
+                    player_name = top_te['Player'].split(' (')[0]
+                    # Truncate long names to fit better
+                    if len(player_name) > 15:
+                        player_name = player_name[:12] + "..."
+                    st.metric("🎪 #1 TE", player_name, f"{top_te['Total_FPTS']:.1f} pts")
                 else:
-                    st.metric("🎪 Top TE", "N/A", "No data")
+                    st.metric("🎪 #1 TE", "N/A", "No data")
             else:
                 te_top = analyzer.get_top_performers('TE', week=None, top_n=1)
                 if te_top is not None and not te_top.empty:
-                    st.metric("🎪 Top TE", f"{te_top.iloc[0]['Player'].split(' (')[0]}", f"{te_top.iloc[0]['FPTS']:.1f} pts")
+                    player_name = te_top.iloc[0]['Player'].split(' (')[0]
+                    # Truncate long names to fit better
+                    if len(player_name) > 15:
+                        player_name = player_name[:12] + "..."
+                    st.metric("🎪 #1 TE", player_name, f"{te_top.iloc[0]['FPTS']:.1f} pts")
                 else:
-                    st.metric("🎪 Top TE", "N/A", "No data")
+                    st.metric("🎪 #1 TE", "N/A", "No data")
         except Exception as e:
-            st.metric("🎪 Top TE", "Error", str(e)[:20])
+            st.metric("🎪 #1 TE", "Error", str(e)[:20])
     
     st.markdown('</div>', unsafe_allow_html=True)
     
     # Fallback display in case metrics don't show
     st.markdown("""
     <div style="background: #f9fafb; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; border: 1px solid #e5e7eb;">
-        <h4 style="color: #374151; margin-bottom: 0.5rem;">📊 Quick Stats:</h4>
+        <h4 style="color: #374151; margin-bottom: 0.5rem; font-size: 1rem;">📊 Quick Stats:</h4>
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
             <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
-                <div style="font-weight: 600; color: #1e3a8a;">🏈 QB</div>
-                <div style="color: #6b7280;">Lamar Jackson</div>
-                <div style="color: #059669; font-weight: 600;">460.8 pts</div>
+                <div style="font-weight: 600; color: #1e3a8a; font-size: 0.8rem;">🏈 #1 QB</div>
+                <div style="color: #6b7280; font-size: 0.9rem; word-wrap: break-word;">Lamar Jackson</div>
+                <div style="color: #059669; font-weight: 600; font-size: 0.85rem;">460.8 pts</div>
             </div>
             <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
-                <div style="font-weight: 600; color: #1e3a8a;">🏃‍♂️ RB</div>
-                <div style="color: #6b7280;">Saquon Barkley</div>
-                <div style="color: #059669; font-weight: 600;">361.8 pts</div>
+                <div style="font-weight: 600; color: #1e3a8a; font-size: 0.8rem;">🏃‍♂️ #1 RB</div>
+                <div style="color: #6b7280; font-size: 0.9rem; word-wrap: break-word;">Saquon Barkley</div>
+                <div style="color: #059669; font-weight: 600; font-size: 0.85rem;">361.8 pts</div>
             </div>
             <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
-                <div style="font-weight: 600; color: #1e3a8a;">🎯 WR</div>
-                <div style="color: #6b7280;">Ja'Marr Chase</div>
-                <div style="color: #059669; font-weight: 600;">291.6 pts</div>
+                <div style="font-weight: 600; color: #1e3a8a; font-size: 0.8rem;">🎯 #1 WR</div>
+                <div style="color: #6b7280; font-size: 0.9rem; word-wrap: break-word;">Ja'Marr Chase</div>
+                <div style="color: #059669; font-weight: 600; font-size: 0.85rem;">291.6 pts</div>
             </div>
             <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
-                <div style="font-weight: 600; color: #1e3a8a;">🎪 TE</div>
-                <div style="color: #6b7280;">George Kittle</div>
-                <div style="color: #059669; font-weight: 600;">190.8 pts</div>
+                <div style="font-weight: 600; color: #1e3a8a; font-size: 0.8rem;">🎪 #1 TE</div>
+                <div style="color: #6b7280; font-size: 0.9rem; word-wrap: break-word;">George Kittle</div>
+                <div style="color: #059669; font-weight: 600; font-size: 0.85rem;">190.8 pts</div>
             </div>
         </div>
     </div>
@@ -1115,13 +1152,13 @@ def show_about():
                  alt="NFL Logo" 
                  style="width: 80px; height: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); margin-bottom: 0.5rem;">
         </div>
-        <h3 style="color: #1e3a8a; margin-bottom: 1rem; text-align: center;">🏈 Fantasy Football Analysis Dashboard</h3>
+        <h3 style="color: #374151; margin-bottom: 1rem; text-align: center;">🏈 Fantasy Football Analysis Dashboard</h3>
         
         <p style="font-size: 1.1rem; color: #374151; margin-bottom: 1.5rem;">
             This interactive dashboard provides comprehensive analysis of fantasy football data from FantasyPros.
         </p>
         
-        <h4 style="color: #059669; margin-bottom: 0.5rem;">✨ Features:</h4>
+        <h4 style="color: #475569; margin-bottom: 0.5rem;">✨ Features:</h4>
         <ul style="color: #6b7280; margin-bottom: 1.5rem;">
             <li><strong>Season Overview:</strong> Top performers and position comparisons</li>
             <li><strong>Position Analysis:</strong> Detailed analysis for each position (QB, RB, WR, TE)</li>
@@ -1130,7 +1167,7 @@ def show_about():
             <li><strong>Week Filtering:</strong> Analyze specific weeks or week ranges</li>
         </ul>
         
-        <h4 style="color: #059669; margin-bottom: 0.5rem;">🛠️ Technology:</h4>
+        <h4 style="color: #475569; margin-bottom: 0.5rem;">🛠️ Technology:</h4>
         <ul style="color: #6b7280; margin-bottom: 1.5rem;">
             <li>Built with <strong>Streamlit</strong></li>
             <li>Interactive <strong>Plotly</strong> charts</li>
@@ -1138,12 +1175,12 @@ def show_about():
             <li>Advanced filtering capabilities</li>
         </ul>
         
-        <h4 style="color: #059669; margin-bottom: 0.5rem;">🚀 Deployment:</h4>
+        <h4 style="color: #475569; margin-bottom: 0.5rem;">🚀 Deployment:</h4>
         <p style="color: #6b7280; margin-bottom: 1.5rem;">
             This dashboard is designed to be deployed on Streamlit Cloud or any web hosting service.
         </p>
         
-        <h4 style="color: #059669; margin-bottom: 0.5rem;">👨‍💻 Author:</h4>
+        <h4 style="color: #475569; margin-bottom: 0.5rem;">👨‍💻 Author:</h4>
         <p style="color: #6b7280;">
             Professional fantasy football analysis tool for data-driven decision making.
         </p>
