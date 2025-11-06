@@ -1491,9 +1491,13 @@ def show_ml_forecast(analyzer, selected_weeks, selected_season):
     try:
         from fantasy_ml_forecaster import FantasyMLForecaster
         forecaster = FantasyMLForecaster(analyzer, selected_season)
+    except ImportError as e:
+        st.error(f"ML forecasting packages not installed: {str(e)}")
+        st.info("📦 To enable ML forecasting, install: `pip install prophet scikit-learn statsmodels xgboost`")
+        st.markdown("For now, please use the other analysis pages (Overview, Position Analysis, Weekly Trends, Consistency Analysis).")
+        return
     except Exception as e:
         st.error(f"Error loading ML forecaster: {str(e)}")
-        st.info("ML forecasting features require additional packages. Install with: pip install -r requirements.txt")
         return
     
     # Data availability check
