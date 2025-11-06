@@ -1216,16 +1216,13 @@ def main():
     with st.spinner('🔄 Loading fantasy football data...'):
         analyzer = load_data()
     
-    # Show data source indicator
+    # Show data source indicator (only show if using sample data)
     if st.session_state.get('using_sample_data', False):
         if 'load_error' in st.session_state:
             st.error(f"⚠️ Error loading real data: {st.session_state['load_error']}")
             st.warning("📊 Using sample/demo data for demonstration. To use your real data, check the error above.")
         else:
             st.info("📊 Using sample/demo data. Real data path not found.")
-    else:
-        if 'data_path' in st.session_state:
-            st.success(f"✅ Loaded real data from: {st.session_state['data_path']}")
     
     # Sidebar for navigation with NFL branding
     st.sidebar.markdown("""
