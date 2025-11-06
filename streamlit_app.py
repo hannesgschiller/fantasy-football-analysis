@@ -385,14 +385,19 @@ def load_data():
     
     # If no data path found, use sample data
     if data_path is None:
+        st.session_state['using_sample_data'] = True
         return create_sample_data()
     
     try:
         analyzer = FantasyFootballAnalyzer(data_path)
         analyzer.load_weekly_data()
         analyzer.load_season_data()
+        st.session_state['using_sample_data'] = False
+        st.session_state['data_path'] = data_path
         return analyzer
     except Exception as e:
+        st.session_state['using_sample_data'] = True
+        st.session_state['load_error'] = str(e)
         return create_sample_data()
 
 def create_sample_data():
@@ -453,7 +458,7 @@ def create_sample_data():
             self._create_weekly_data()
         
         def _create_weekly_data(self):
-            """Create consistent weekly data for all 18 weeks for both seasons"""
+            """Create consistent weekly data - 18 weeks for 2024, 10 weeks for 2025"""
             # Pre-generate weekly variations for consistency
             weekly_variations = {}
             for position in self.positions:
@@ -469,12 +474,15 @@ def create_sample_data():
                         variation = np.random.normal(0, 2)
                     weekly_variations[position].append(variation)
             
-            # Create weekly data for both 2024 and 2025 seasons
+            # Create weekly data for both seasons with different week counts
             for season in self.available_seasons:
                 self.weekly_data[season] = {}
                 
-                # Create weekly data for all 18 weeks
-                for week in range(1, 19):
+                # 2024: Full 18-week season, 2025: Ongoing 10-week season
+                max_week = 18 if season == '2024' else 10
+                
+                # Create weekly data
+                for week in range(1, max_week + 1):
                     week_name = f"Week {week}"
                     self.weekly_data[season][week_name] = {}
                     
@@ -1198,6 +1206,17 @@ def main():
     # Load data with progress indicator
     with st.spinner('🔄 Loading fantasy football data...'):
         analyzer = load_data()
+    
+    # Show data source indicator
+    if st.session_state.get('using_sample_data', False):
+        if 'load_error' in st.session_state:
+            st.error(f"⚠️ Error loading real data: {st.session_state['load_error']}")
+            st.warning("📊 Using sample/demo data for demonstration. To use your real data, check the error above.")
+        else:
+            st.info("📊 Using sample/demo data. Real data path not found.")
+    else:
+        if 'data_path' in st.session_state:
+            st.success(f"✅ Loaded real data from: {st.session_state['data_path']}")
     
     # Sidebar for navigation with NFL branding
     st.sidebar.markdown("""
