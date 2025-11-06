@@ -25,42 +25,130 @@ class FantasyFootballAnalyzer:
         self.positions = ['QB', 'RB', 'WR', 'TE']
         self.weekly_data = {}
         self.season_data = {}
+        self.available_seasons = []
+        
+        # Detect if we have multi-season structure or legacy structure
+        self._detect_data_structure()
+    
+    def _detect_data_structure(self):
+        """Detect if data is organized by season based on folder naming"""
+        # Get all week folders
+        week_folders = [f for f in self.data_path.iterdir() 
+                       if f.is_dir() and f.name.startswith('Week')]
+        
+        if not week_folders:
+            # No data found
+            self.available_seasons = []
+            self.is_multi_season = False
+            return
+        
+        # Separate folders by season based on naming convention
+        # Folders ending with "-2025" or "-25" are 2025 season, rest are 2024
+        season_2024_weeks = []
+        season_2025_weeks = []
+        
+        for folder in week_folders:
+            if folder.name.endswith('-2025') or folder.name.endswith('-25'):
+                season_2025_weeks.append(folder)
+            else:
+                season_2024_weeks.append(folder)
+        
+        # We have multi-season data if we have weeks for both seasons
+        if season_2024_weeks and season_2025_weeks:
+            self.available_seasons = ['2024', '2025']
+            self.is_multi_season = True
+        elif season_2025_weeks:
+            # Only 2025 data
+            self.available_seasons = ['2025']
+            self.is_multi_season = False
+        elif season_2024_weeks:
+            # Only 2024 data
+            self.available_seasons = ['2024']
+            self.is_multi_season = False
+        else:
+            self.available_seasons = []
+            self.is_multi_season = False
         
     def load_weekly_data(self):
-        """Load all weekly data for all positions"""
+        """Load all weekly data for all positions, supporting multi-season based on folder names"""
         print("Loading weekly fantasy football data...")
         
-        # Find all week folders
-        week_folders = sorted([f for f in self.data_path.iterdir() 
-                              if f.is_dir() and f.name.startswith('Week')])
+        # Get all week folders and categorize by season
+        week_folders = [f for f in self.data_path.iterdir() 
+                       if f.is_dir() and f.name.startswith('Week')]
         
-        for week_folder in week_folders:
-            week_num = week_folder.name
-            self.weekly_data[week_num] = {}
+        # Initialize season data structures
+        for season in self.available_seasons:
+            self.weekly_data[season] = {}
+        
+        # Load data for each week folder
+        for week_folder in sorted(week_folders):
+            # Determine season based on folder name
+            if week_folder.name.endswith('-2025'):
+                season = '2025'
+                # Remove the -2025 suffix for the week name
+                week_num = week_folder.name.replace('-2025', '')
+            elif week_folder.name.endswith('-25'):
+                season = '2025'
+                # Remove the -25 suffix for the week name
+                week_num = week_folder.name.replace('-25', '')
+            else:
+                season = '2024'
+                week_num = week_folder.name
+            
+            # Only process if this season is available
+            if season not in self.available_seasons:
+                continue
+            
+            self.weekly_data[season][week_num] = {}
             
             for position in self.positions:
-                # Look for position-specific CSV files
                 pattern = f"*{position}*.csv"
                 files = list(week_folder.glob(pattern))
                 
                 if files:
                     try:
                         df = pd.read_csv(files[0])
-                        # Clean column names
                         df.columns = df.columns.str.strip().str.replace('"', '')
-                        self.weekly_data[week_num][position] = df
-                        print(f"Loaded {position} data for {week_num}")
+                        self.weekly_data[season][week_num][position] = df
+                        print(f"Loaded {position} data for {season} {week_num}")
                     except Exception as e:
-                        print(f"Error loading {position} data for {week_num}: {e}")
+                        print(f"Error loading {position} data for {season} {week_num}: {e}")
         
-        print(f"Loaded data for {len(self.weekly_data)} weeks")
+        # Print summary
+        for season in self.available_seasons:
+            print(f"Loaded {len(self.weekly_data[season])} weeks for season {season}")
         
     def load_season_data(self):
-        """Load season-long aggregated data"""
+        """Load season-long aggregated data based on folder naming"""
         print("Loading season-long data...")
         
-        season_folder = self.data_path / "Full Season"
-        if season_folder.exists():
+        # Initialize season data structures
+        for season in self.available_seasons:
+            self.season_data[season] = {}
+        
+        # Check for Full Season folders (both with and without suffix)
+        full_season_folders = [f for f in self.data_path.iterdir() 
+                               if f.is_dir() and f.name.startswith('Full Season')]
+        
+        for season_folder in full_season_folders:
+            # Determine which season this belongs to
+            if season_folder.name.endswith('-2025') or season_folder.name.endswith('-25') or season_folder.name == 'Full Season-2025':
+                season = '2025'
+            else:
+                # Default to 2024 for folders without suffix or with "Full Season" only
+                # If we only have 2025 data, use that instead
+                if '2024' in self.available_seasons:
+                    season = '2024'
+                elif '2025' in self.available_seasons:
+                    season = '2025'
+                else:
+                    continue
+            
+            # Only process if this season is available
+            if season not in self.available_seasons:
+                continue
+            
             for position in self.positions:
                 pattern = f"*{position}*.csv"
                 files = list(season_folder.glob(pattern))
@@ -69,12 +157,12 @@ class FantasyFootballAnalyzer:
                     try:
                         df = pd.read_csv(files[0])
                         df.columns = df.columns.str.strip().str.replace('"', '')
-                        self.season_data[position] = df
-                        print(f"Loaded season {position} data")
+                        self.season_data[season][position] = df
+                        print(f"Loaded {season} season {position} data")
                     except Exception as e:
-                        print(f"Error loading season {position} data: {e}")
+                        print(f"Error loading {season} season {position} data: {e}")
     
-    def get_top_performers(self, position, week=None, top_n=10):
+    def get_top_performers(self, position, week=None, top_n=10, season=None):
         """
         Get top performers for a specific position and week
         
@@ -82,15 +170,20 @@ class FantasyFootballAnalyzer:
             position (str): Position (QB, RB, WR, TE)
             week (str): Week number (e.g., 'Week 1') or None for season
             top_n (int): Number of top performers to return
+            season (str): Season year (e.g., '2024', '2025') or None for most recent
         """
+        # Default to most recent season if not specified
+        if season is None:
+            season = self.available_seasons[-1] if self.available_seasons else '2025'
+        
         if week:
-            if week in self.weekly_data and position in self.weekly_data[week]:
-                df = self.weekly_data[week][position]
+            if season in self.weekly_data and week in self.weekly_data[season] and position in self.weekly_data[season][week]:
+                df = self.weekly_data[season][week][position]
             else:
                 return None
         else:
-            if position in self.season_data:
-                df = self.season_data[position]
+            if season in self.season_data and position in self.season_data[season]:
+                df = self.season_data[season][position]
             else:
                 return None
         
@@ -99,54 +192,66 @@ class FantasyFootballAnalyzer:
             return df.nlargest(top_n, 'FPTS')[['Player', 'FPTS', 'FPTS/G']]
         return None
     
-    def analyze_position_trends(self, position, metric='FPTS'):
+    def analyze_position_trends(self, position, metric='FPTS', season=None):
         """
         Analyze trends for a specific position across weeks
         
         Args:
             position (str): Position to analyze
             metric (str): Metric to track (FPTS, FPTS/G, etc.)
+            season (str): Season year or None for most recent
         """
+        # Default to most recent season if not specified
+        if season is None:
+            season = self.available_seasons[-1] if self.available_seasons else '2025'
+        
         trends = []
         
-        for week, week_data in self.weekly_data.items():
-            if position in week_data:
-                df = week_data[position]
-                if metric in df.columns:
-                    # Get top 5 performers for the week
-                    top_5 = df.nlargest(5, metric)
-                    for _, row in top_5.iterrows():
-                        trends.append({
-                            'Week': week,
-                            'Player': row['Player'],
-                            metric: row[metric],
-                            'Rank': row.get('Rank', 'N/A')
-                        })
+        if season in self.weekly_data:
+            for week, week_data in self.weekly_data[season].items():
+                if position in week_data:
+                    df = week_data[position]
+                    if metric in df.columns:
+                        # Get top 5 performers for the week
+                        top_5 = df.nlargest(5, metric)
+                        for _, row in top_5.iterrows():
+                            trends.append({
+                                'Week': week,
+                                'Player': row['Player'],
+                                metric: row[metric],
+                                'Rank': row.get('Rank', 'N/A')
+                            })
         
         return pd.DataFrame(trends)
     
-    def get_consistency_analysis(self, position, min_games=3):
+    def get_consistency_analysis(self, position, min_games=3, season=None):
         """
         Analyze player consistency across weeks
         
         Args:
             position (str): Position to analyze
             min_games (int): Minimum games played to be included
+            season (str): Season year or None for most recent
         """
+        # Default to most recent season if not specified
+        if season is None:
+            season = self.available_seasons[-1] if self.available_seasons else '2025'
+        
         player_stats = {}
         
-        for week, week_data in self.weekly_data.items():
-            if position in week_data:
-                df = week_data[position]
-                for _, row in df.iterrows():
-                    player = row['Player']
-                    fpts = row.get('FPTS', 0)
-                    
-                    if player not in player_stats:
-                        player_stats[player] = {'weeks': [], 'fpts': []}
-                    
-                    player_stats[player]['weeks'].append(week)
-                    player_stats[player]['fpts'].append(fpts)
+        if season in self.weekly_data:
+            for week, week_data in self.weekly_data[season].items():
+                if position in week_data:
+                    df = week_data[position]
+                    for _, row in df.iterrows():
+                        player = row['Player']
+                        fpts = row.get('FPTS', 0)
+                        
+                        if player not in player_stats:
+                            player_stats[player] = {'weeks': [], 'fpts': []}
+                        
+                        player_stats[player]['weeks'].append(week)
+                        player_stats[player]['fpts'].append(fpts)
         
         # Calculate consistency metrics
         consistency_data = []
@@ -165,20 +270,25 @@ class FantasyFootballAnalyzer:
         
         return pd.DataFrame(consistency_data).sort_values('Consistency_Score', ascending=False)
     
-    def create_weekly_summary(self, week):
+    def create_weekly_summary(self, week, season=None):
         """
         Create a summary of top performers for a specific week
         
         Args:
             week (str): Week to analyze (e.g., 'Week 1')
+            season (str): Season year or None for most recent
         """
-        if week not in self.weekly_data:
+        # Default to most recent season if not specified
+        if season is None:
+            season = self.available_seasons[-1] if self.available_seasons else '2025'
+        
+        if season not in self.weekly_data or week not in self.weekly_data[season]:
             return None
         
         summary = {}
         for position in self.positions:
-            if position in self.weekly_data[week]:
-                df = self.weekly_data[week][position]
+            if position in self.weekly_data[season][week]:
+                df = self.weekly_data[season][week][position]
                 top_3 = df.nlargest(3, 'FPTS')[['Player', 'FPTS']]
                 summary[position] = top_3
         

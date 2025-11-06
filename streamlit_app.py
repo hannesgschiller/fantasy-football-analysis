@@ -76,10 +76,10 @@ st.markdown("""
     /* Metric cards with modern design */
     .metric-card {
         background: linear-gradient(135deg, #ffffff, #f8fafc);
-        padding: 1.5rem;
-        border-radius: 1rem;
-        border: 2px solid #e2e8f0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         transition: all 0.3s ease;
         margin-bottom: 1rem;
         color: #1f2937;
@@ -94,30 +94,30 @@ st.markdown("""
     /* Week filter styling */
     .week-filter {
         background: #f8fafc;
-        padding: 1.5rem;
-        border-radius: 1rem;
-        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1.25rem;
         border: 1px solid #e2e8f0;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         color: #374151;
     }
     
     /* Section headers */
     .section-header {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
         font-weight: 700;
-        color: #374151;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #d1d5db;
+        color: #1f2937;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 2px solid #e5e7eb;
     }
     
     /* Subsection headers */
     .subsection-header {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         font-weight: 600;
-        color: #4b5563;
-        margin-bottom: 1rem;
+        color: #374151;
+        margin-bottom: 0.75rem;
         padding-left: 0.5rem;
         border-left: 3px solid #9ca3af;
     }
@@ -173,6 +173,41 @@ st.markdown("""
     /* Sidebar styling */
     .css-1d391kg {
         background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+    }
+    
+    /* Improve sidebar text readability */
+    [data-testid="stSidebar"] {
+        background-color: #1e293b !important;
+    }
+    
+    [data-testid="stSidebar"] label {
+        color: #f1f5f9 !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+    }
+    
+    [data-testid="stSidebar"] h3 {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    /* Specifically target markdown h3 in sidebar */
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h3 {
+        color: #ffffff !important;
+    }
+    
+    [data-testid="stSidebar"] .stSelectbox label {
+        color: #e2e8f0 !important;
+    }
+    
+    [data-testid="stSidebar"] div[data-baseweb="select"] {
+        background-color: #334155 !important;
+    }
+    
+    [data-testid="stSidebar"] div[data-baseweb="select"] > div {
+        color: #ffffff !important;
+        font-weight: 500 !important;
     }
     
     /* Button styling */
@@ -256,23 +291,46 @@ st.markdown("""
         color: #1f2937 !important;
     }
     
-    /* Fix metric value text size */
+    /* Fix metric value text size and color */
     .stMetric [data-testid="metric-value"] {
-        font-size: 1.1rem !important;
+        font-size: 0.95rem !important;
         font-weight: 700 !important;
-        color: #1f2937 !important;
+        color: #111827 !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        line-height: 1.3 !important;
     }
     
-    /* Fix metric label text size */
+    /* Fix metric label text size and color */
     .stMetric [data-testid="metric-label"] {
         font-size: 0.85rem !important;
         font-weight: 600 !important;
-        color: #374151 !important;
+        color: #1f2937 !important;
     }
     
     /* Fix metric delta text size */
     .stMetric [data-testid="metric-delta"] {
         font-size: 0.8rem !important;
+    }
+    
+    /* Force all metric text to be dark and readable */
+    .stMetric div {
+        color: #111827 !important;
+        white-space: normal !important;
+    }
+    
+    /* Specifically target the value display */
+    div[data-testid="stMetricValue"] > div {
+        color: #111827 !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+    
+    /* Allow metric container to expand vertically */
+    .stMetric {
+        min-height: 80px !important;
     }
     
     /* Ensure tabs are readable */
@@ -289,6 +347,22 @@ st.markdown("""
     .stTabs [aria-selected="true"] {
         color: #1e3a8a !important;
         border-bottom: 2px solid #1e3a8a !important;
+    }
+    
+    /* Make subheaders readable */
+    .stApp h3 {
+        color: #111827 !important;
+        font-weight: 700 !important;
+        font-size: 1.3rem !important;
+    }
+    
+    /* Data table header styling */
+    .data-header {
+        color: #1f2937;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -322,12 +396,14 @@ def load_data():
         return create_sample_data()
 
 def create_sample_data():
-    """Create sample data for demonstration"""
+    """Create sample data for demonstration with multi-season support"""
     class SampleAnalyzer:
         def __init__(self):
             self.positions = ['QB', 'RB', 'WR', 'TE']
             self.weekly_data = {}
             self.season_data = {}
+            self.available_seasons = ['2024', '2025']
+            self.is_multi_season = True
             
             # Set random seed for reproducible data
             np.random.seed(42)
@@ -357,18 +433,27 @@ def create_sample_data():
                 'FPTS/G': [10.6, 8.9, 8.7, 8.0, 7.8]
             })
             
+            # Create season data for both 2024 and 2025 with multi-season structure
             self.season_data = {
-                'QB': sample_qb,
-                'RB': sample_rb,
-                'WR': sample_wr,
-                'TE': sample_te
+                '2024': {
+                    'QB': sample_qb.copy(),
+                    'RB': sample_rb.copy(),
+                    'WR': sample_wr.copy(),
+                    'TE': sample_te.copy()
+                },
+                '2025': {
+                    'QB': sample_qb.copy(),
+                    'RB': sample_rb.copy(),
+                    'WR': sample_wr.copy(),
+                    'TE': sample_te.copy()
+                }
             }
             
             # Create sample weekly data for all 18 weeks with consistent data
             self._create_weekly_data()
         
         def _create_weekly_data(self):
-            """Create consistent weekly data for all 18 weeks"""
+            """Create consistent weekly data for all 18 weeks for both seasons"""
             # Pre-generate weekly variations for consistency
             weekly_variations = {}
             for position in self.positions:
@@ -384,66 +469,78 @@ def create_sample_data():
                         variation = np.random.normal(0, 2)
                     weekly_variations[position].append(variation)
             
-            # Create weekly data for all 18 weeks
-            for week in range(1, 19):
-                week_name = f"Week {week}"
-                self.weekly_data[week_name] = {}
+            # Create weekly data for both 2024 and 2025 seasons
+            for season in self.available_seasons:
+                self.weekly_data[season] = {}
                 
-                for position in self.positions:
-                    if position == 'QB':
-                        base_scores = [25.6, 22.7, 22.5, 22.2, 22.1]
-                        players = ['Lamar Jackson (BAL)', 'Josh Allen (BUF)', 'Joe Burrow (CIN)', 'Patrick Mahomes (KC)', 'Jalen Hurts (PHI)']
-                    elif position == 'RB':
-                        base_scores = [20.1, 18.7, 18.3, 18.2, 17.9]
-                        players = ['Saquon Barkley (PHI)', 'Derrick Henry (BAL)', 'Jahmyr Gibbs (DET)', 'Christian McCaffrey (SF)', 'Alvin Kamara (NO)']
-                    elif position == 'WR':
-                        base_scores = [16.2, 12.6, 11.8, 11.7, 11.5]
-                        players = ['Ja\'Marr Chase (CIN)', 'Justin Jefferson (MIN)', 'Amon-Ra St. Brown (DET)', 'Tyreek Hill (MIA)', 'CeeDee Lamb (DAL)']
-                    else:  # TE
-                        base_scores = [10.6, 8.9, 8.7, 8.0, 7.8]
-                        players = ['George Kittle (SF)', 'Brock Bowers (LV)', 'Trey McBride (ARI)', 'Sam LaPorta (DET)', 'Evan Engram (JAX)']
+                # Create weekly data for all 18 weeks
+                for week in range(1, 19):
+                    week_name = f"Week {week}"
+                    self.weekly_data[season][week_name] = {}
                     
-                    # Generate weekly scores with consistent variations
-                    weekly_variation = weekly_variations[position][week-1]
-                    weekly_scores = []
-                    
-                    for i, base_score in enumerate(base_scores):
-                        # Add weekly variation plus individual player variation
+                    for position in self.positions:
                         if position == 'QB':
-                            player_variation = np.random.normal(0, 3)
+                            base_scores = [25.6, 22.7, 22.5, 22.2, 22.1]
+                            players = ['Lamar Jackson (BAL)', 'Josh Allen (BUF)', 'Joe Burrow (CIN)', 'Patrick Mahomes (KC)', 'Jalen Hurts (PHI)']
                         elif position == 'RB':
-                            player_variation = np.random.normal(0, 2.5)
+                            base_scores = [20.1, 18.7, 18.3, 18.2, 17.9]
+                            players = ['Saquon Barkley (PHI)', 'Derrick Henry (BAL)', 'Jahmyr Gibbs (DET)', 'Christian McCaffrey (SF)', 'Alvin Kamara (NO)']
                         elif position == 'WR':
-                            player_variation = np.random.normal(0, 2)
+                            base_scores = [16.2, 12.6, 11.8, 11.7, 11.5]
+                            players = ['Ja\'Marr Chase (CIN)', 'Justin Jefferson (MIN)', 'Amon-Ra St. Brown (DET)', 'Tyreek Hill (MIA)', 'CeeDee Lamb (DAL)']
                         else:  # TE
-                            player_variation = np.random.normal(0, 1.5)
+                            base_scores = [10.6, 8.9, 8.7, 8.0, 7.8]
+                            players = ['George Kittle (SF)', 'Brock Bowers (LV)', 'Trey McBride (ARI)', 'Sam LaPorta (DET)', 'Evan Engram (JAX)']
                         
-                        weekly_score = max(0, base_score + weekly_variation + player_variation)
-                        weekly_scores.append(round(weekly_score, 1))
-                    
-                    df = pd.DataFrame({
-                        'Player': players,
-                        'FPTS': weekly_scores,
-                        'FPTS/G': base_scores
-                    })
-                    
-                    self.weekly_data[week_name][position] = df
+                        # Generate weekly scores with consistent variations
+                        weekly_variation = weekly_variations[position][week-1]
+                        weekly_scores = []
+                        
+                        for i, base_score in enumerate(base_scores):
+                            # Add weekly variation plus individual player variation
+                            if position == 'QB':
+                                player_variation = np.random.normal(0, 3)
+                            elif position == 'RB':
+                                player_variation = np.random.normal(0, 2.5)
+                            elif position == 'WR':
+                                player_variation = np.random.normal(0, 2)
+                            else:  # TE
+                                player_variation = np.random.normal(0, 1.5)
+                            
+                            weekly_score = max(0, base_score + weekly_variation + player_variation)
+                            weekly_scores.append(round(weekly_score, 1))
+                        
+                        df = pd.DataFrame({
+                            'Player': players,
+                            'FPTS': weekly_scores,
+                            'FPTS/G': base_scores
+                        })
+                        
+                        self.weekly_data[season][week_name][position] = df
         
-        def get_top_performers(self, position, week=None, top_n=10):
+        def get_top_performers(self, position, week=None, top_n=10, season=None):
+            # Default to most recent season if not specified
+            if season is None:
+                season = self.available_seasons[-1] if self.available_seasons else '2025'
+            
             if week:
-                if week in self.weekly_data and position in self.weekly_data[week]:
-                    return self.weekly_data[week][position].head(top_n)
+                if season in self.weekly_data and week in self.weekly_data[season] and position in self.weekly_data[season][week]:
+                    return self.weekly_data[season][week][position].head(top_n)
                 return None
             else:
-                if position in self.season_data:
-                    return self.season_data[position].head(top_n)
+                if season in self.season_data and position in self.season_data[season]:
+                    return self.season_data[season][position].head(top_n)
                 return None
         
-        def get_consistency_analysis(self, position, min_games=3):
+        def get_consistency_analysis(self, position, min_games=3, season=None):
+            # Default to most recent season if not specified
+            if season is None:
+                season = self.available_seasons[-1] if self.available_seasons else '2025'
+            
             # Create sample consistency data for full 18-week season
             sample_data = []
-            if position in self.season_data:
-                for i, row in self.season_data[position].iterrows():
+            if season in self.season_data and position in self.season_data[season]:
+                for i, row in self.season_data[season][position].iterrows():
                     # Generate realistic consistency metrics
                     avg_fpts = row['FPTS/G']
                     std_fpts = avg_fpts * 0.35  # 35% standard deviation for realistic variance
@@ -471,23 +568,67 @@ def create_sample_data():
         
         def debug_weekly_data(self):
             """Debug function to verify weekly data creation"""
-            print(f"Total weeks created: {len(self.weekly_data)}")
-            print(f"Week names: {sorted(self.weekly_data.keys())}")
-            for week in sorted(self.weekly_data.keys()):
-                print(f"{week}: {list(self.weekly_data[week].keys())}")
+            print(f"Total seasons: {len(self.weekly_data)}")
+            for season in sorted(self.weekly_data.keys()):
+                print(f"\n{season}:")
+                print(f"  Total weeks: {len(self.weekly_data[season])}")
+                print(f"  Week names: {sorted(self.weekly_data[season].keys())}")
+                for week in sorted(self.weekly_data[season].keys()):
+                    print(f"  {week}: {list(self.weekly_data[season][week].keys())}")
     
     return SampleAnalyzer()
 
-def get_filtered_data(analyzer, selected_weeks, position):
-    """Get data filtered by selected weeks"""
+def format_column_names(df):
+    """Format column names to be more readable (remove underscores, proper capitalization)"""
+    if df is None or df.empty:
+        return df
+    
+    # Create a copy to avoid modifying the original
+    df = df.copy()
+    
+    # Column name mapping
+    column_map = {
+        'Total_FPTS': 'Total FPTS',
+        'Avg_FPTS': 'Avg FPTS',
+        'Games_Played': 'Games Played',
+        'Weeks_Played': 'Weeks Played',
+        'Std_FPTS': 'Std FPTS',
+        'Min_FPTS': 'Min FPTS',
+        'Max_FPTS': 'Max FPTS',
+        'Consistency_Score': 'Consistency Score',
+        'Next_Week_Pred': 'Next Week Pred',
+        'Confidence_Low': 'Confidence Low',
+        'Confidence_High': 'Confidence High',
+        'Current_Avg': 'Current Avg',
+        'Current_Total': 'Current Total',
+        'Projected_Total': 'Projected Total',
+        'Weeks_Remaining': 'Weeks Remaining',
+        'Projected_Avg': 'Projected Avg',
+        'Projected_Rank': 'Projected Rank',
+        'Season_Avg': 'Season Avg',
+        'Recent_Avg': 'Recent Avg',
+        'Trend_Slope': 'Trend Slope',
+        'Momentum_Score': 'Momentum Score',
+        'Risk_Score': 'Risk Score',
+        'Volatility_Rating': 'Volatility Rating',
+        'FPTS/G': 'FPTS per Game'
+    }
+    
+    # Rename columns
+    df.rename(columns=column_map, inplace=True)
+    
+    return df
+
+def get_filtered_data(analyzer, selected_weeks, position, season):
+    """Get data filtered by selected weeks and season"""
     if not selected_weeks:
         return None
     
     all_data = []
     
     for week in selected_weeks:
-        if week in analyzer.weekly_data and position in analyzer.weekly_data[week]:
-            df = analyzer.weekly_data[week][position].copy()
+        if season in analyzer.weekly_data and week in analyzer.weekly_data[season] and position in analyzer.weekly_data[season][week]:
+            df = analyzer.weekly_data[season][week][position].copy()
             df['Week'] = week
             all_data.append(df)
     
@@ -513,14 +654,16 @@ def get_filtered_data(analyzer, selected_weeks, position):
     
     return None
 
-def create_week_filter():
+def create_week_filter(analyzer, selected_season):
     """Create week filter widget"""
     st.markdown('<div class="week-filter">', unsafe_allow_html=True)
-    st.markdown('<h3 style="color: #1e3a8a; font-weight: 700; margin-bottom: 1rem;">📅 Week Filter</h3>', unsafe_allow_html=True)
+    st.markdown('<h3 style="color: #1e3a8a; font-weight: 700; margin-bottom: 0.75rem; font-size: 1.1rem;">📅 Week Filter</h3>', unsafe_allow_html=True)
     
-    # Get available weeks
-    analyzer = load_data()
-    available_weeks = sorted(analyzer.weekly_data.keys())
+    # Get available weeks for the selected season
+    if selected_season in analyzer.weekly_data:
+        available_weeks = sorted(analyzer.weekly_data[selected_season].keys())
+    else:
+        available_weeks = []
     
     col1, col2 = st.columns(2)
     
@@ -655,18 +798,25 @@ def create_top_performers_chart(df, position, title, selected_weeks=None):
         ),
         xaxis_title=dict(
             text=value_label,
-            font=dict(size=14, color='#6b7280')
+            font=dict(size=14, color='#1f2937')
         ),
         yaxis_title=dict(
             text="Players",
-            font=dict(size=14, color='#6b7280')
+            font=dict(size=14, color='#1f2937')
+        ),
+        yaxis=dict(
+            categoryorder='total ascending',
+            tickfont=dict(size=13, color='#111827', family='Arial, sans-serif'),
+            tickmode='linear'
+        ),
+        xaxis=dict(
+            tickfont=dict(size=12, color='#1f2937')
         ),
         height=450,
         showlegend=False,
-        yaxis={'categoryorder': 'total ascending'},
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        margin=dict(l=20, r=20, t=60, b=20)
+        plot_bgcolor='rgba(255,255,255,1)',
+        paper_bgcolor='rgba(255,255,255,1)',
+        margin=dict(l=150, r=20, t=60, b=20)
     )
     
     return fig
@@ -705,33 +855,49 @@ def create_consistency_chart(consistency_df, position):
         ),
         xaxis_title=dict(
             text="Consistency Score (Higher = More Consistent)",
-            font=dict(size=14, color='#6b7280')
+            font=dict(size=14, color='#1f2937')
         ),
         yaxis_title=dict(
             text="Players",
-            font=dict(size=14, color='#6b7280')
+            font=dict(size=14, color='#1f2937')
+        ),
+        yaxis=dict(
+            categoryorder='total ascending',
+            tickfont=dict(size=13, color='#111827', family='Arial, sans-serif'),
+            tickmode='linear'
+        ),
+        xaxis=dict(
+            tickfont=dict(size=12, color='#1f2937')
         ),
         height=450,
         showlegend=False,
-        yaxis={'categoryorder': 'total ascending'},
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        margin=dict(l=20, r=20, t=60, b=20)
+        plot_bgcolor='rgba(255,255,255,1)',
+        paper_bgcolor='rgba(255,255,255,1)',
+        margin=dict(l=150, r=20, t=60, b=20)
     )
     
     return fig
 
-def create_weekly_trends_chart(analyzer, position, top_n=5, selected_weeks=None):
+def create_weekly_trends_chart(analyzer, position, top_n=5, selected_weeks=None, season=None):
     """Create weekly trends chart for top players with modern styling"""
+    # Default to most recent season if not specified
+    if season is None:
+        season = analyzer.available_seasons[-1] if analyzer.available_seasons else '2025'
+    
     # Get top players for the season
-    season_top = analyzer.get_top_performers(position, week=None, top_n=top_n)
+    season_top = analyzer.get_top_performers(position, week=None, top_n=top_n, season=season)
     if season_top is None:
         return go.Figure()
     
     top_players = [p.split(' (')[0] if ' (' in p else p for p in season_top['Player']]
     
-    # Use selected weeks if provided, otherwise use all weeks
-    weeks_to_analyze = selected_weeks if selected_weeks else sorted(analyzer.weekly_data.keys())
+    # Use selected weeks if provided, otherwise use all weeks for the season
+    if selected_weeks:
+        weeks_to_analyze = selected_weeks
+    elif season in analyzer.weekly_data:
+        weeks_to_analyze = sorted(analyzer.weekly_data[season].keys())
+    else:
+        weeks_to_analyze = []
     
     # Track their weekly performance
     weekly_performance = {}
@@ -739,8 +905,8 @@ def create_weekly_trends_chart(analyzer, position, top_n=5, selected_weeks=None)
         weekly_performance[player] = []
     
     for week in weeks_to_analyze:
-        if position in analyzer.weekly_data[week]:
-            df = analyzer.weekly_data[week][position]
+        if season in analyzer.weekly_data and week in analyzer.weekly_data[season] and position in analyzer.weekly_data[season][week]:
+            df = analyzer.weekly_data[season][week][position]
             for player in top_players:
                 # Find player in this week's data
                 player_row = df[df['Player'].str.contains(player, na=False)]
@@ -803,31 +969,235 @@ def create_weekly_trends_chart(analyzer, position, top_n=5, selected_weeks=None)
     
     return fig
 
+def create_forecast_chart(player_name, forecast_data, historical_data):
+    """Create forecast chart showing historical + predicted performance"""
+    if historical_data.empty:
+        return go.Figure()
+    
+    fig = go.Figure()
+    
+    # Historical data
+    fig.add_trace(go.Scatter(
+        x=historical_data['week'],
+        y=historical_data['fpts'],
+        mode='lines+markers',
+        name='Historical',
+        line=dict(color='#1e3a8a', width=3),
+        marker=dict(size=8)
+    ))
+    
+    # Forecast point
+    if forecast_data:
+        next_week = historical_data['week'].max() + 1
+        
+        fig.add_trace(go.Scatter(
+            x=[historical_data['week'].max(), next_week],
+            y=[historical_data['fpts'].iloc[-1], forecast_data['predicted_fpts']],
+            mode='lines+markers',
+            name='Forecast',
+            line=dict(color='#f59e0b', width=3, dash='dash'),
+            marker=dict(size=10, symbol='star')
+        ))
+        
+        # Confidence interval
+        fig.add_trace(go.Scatter(
+            x=[next_week, next_week, next_week],
+            y=[forecast_data['lower_bound'], forecast_data['predicted_fpts'], forecast_data['upper_bound']],
+            mode='markers',
+            name='Confidence Range',
+            marker=dict(color='#f59e0b', size=12, symbol='line-ns', line=dict(width=3))
+        ))
+    
+    fig.update_layout(
+        title=dict(
+            text=f'📈 {player_name} - Performance Forecast',
+            font=dict(size=18, color='#1e3a8a'),
+            x=0.5
+        ),
+        xaxis_title=dict(
+            text='Week',
+            font=dict(size=14, color='#1f2937')
+        ),
+        yaxis_title=dict(
+            text='Fantasy Points',
+            font=dict(size=14, color='#1f2937')
+        ),
+        xaxis=dict(
+            tickfont=dict(size=12, color='#111827'),
+            gridcolor='#e5e7eb'
+        ),
+        yaxis=dict(
+            tickfont=dict(size=12, color='#111827'),
+            gridcolor='#e5e7eb'
+        ),
+        height=400,
+        plot_bgcolor='rgba(255,255,255,1)',
+        paper_bgcolor='rgba(255,255,255,1)',
+        legend=dict(
+            bgcolor='rgba(255,255,255,0.95)',
+            bordercolor='#9ca3af',
+            borderwidth=2,
+            font=dict(size=12, color='#111827', family='Arial, sans-serif')
+        ),
+        hovermode='x unified'
+    )
+    
+    return fig
+
+def create_breakout_chart(breakout_df, position):
+    """Create horizontal bar chart for breakout candidates"""
+    if breakout_df.empty:
+        return go.Figure()
+    
+    top_10 = breakout_df.head(10)
+    players = [p.split(' (')[0] for p in top_10['Player']]
+    
+    fig = go.Figure(data=[
+        go.Bar(
+            x=top_10['Momentum_Score'],
+            y=players,
+            orientation='h',
+            marker_color='#10b981',
+            text=[f"+{val:.1f}%" for val in top_10['Improvement']],
+            textposition='auto',
+            textfont=dict(size=12, color='white')
+        )
+    ])
+    
+    fig.update_layout(
+        title=dict(
+            text=f'🚀 Top Breakout Candidates - {position}',
+            font=dict(size=18, color='#1e3a8a'),
+            x=0.5
+        ),
+        xaxis_title='Momentum Score',
+        yaxis_title='Players',
+        yaxis=dict(
+            categoryorder='total ascending',
+            tickfont=dict(size=13, color='#111827')
+        ),
+        height=450,
+        plot_bgcolor='rgba(255,255,255,1)',
+        paper_bgcolor='rgba(255,255,255,1)',
+        margin=dict(l=150, r=20, t=60, b=20)
+    )
+    
+    return fig
+
+def create_risk_matrix(risk_data, position):
+    """Create scatter plot for risk assessment"""
+    if risk_data.empty:
+        return go.Figure()
+    
+    players = [p.split(' (')[0] for p in risk_data['Player']]
+    
+    # Color by volatility rating
+    color_map = {'Low': '#10b981', 'Medium': '#f59e0b', 'High': '#ef4444'}
+    colors = [color_map.get(rating, '#6b7280') for rating in risk_data['Volatility_Rating']]
+    
+    fig = go.Figure(data=[
+        go.Scatter(
+            x=risk_data['Avg_FPTS'],
+            y=risk_data['Volatility'],
+            mode='markers+text',
+            marker=dict(
+                size=12,
+                color=colors,
+                line=dict(width=1, color='white')
+            ),
+            text=players,
+            textposition='top center',
+            textfont=dict(size=9, color='#111827'),
+            hovertemplate='<b>%{text}</b><br>Avg: %{x:.1f} FPTS<br>Volatility: %{y:.2f}<extra></extra>'
+        )
+    ])
+    
+    fig.update_layout(
+        title=dict(
+            text=f'🎯 Risk/Reward Matrix - {position}',
+            font=dict(size=18, color='#1e3a8a'),
+            x=0.5
+        ),
+        xaxis_title='Average Fantasy Points',
+        yaxis_title='Volatility (Lower = More Consistent)',
+        height=500,
+        plot_bgcolor='rgba(255,255,255,1)',
+        paper_bgcolor='rgba(255,255,255,1)',
+        hovermode='closest'
+    )
+    
+    # Add quadrant lines
+    if not risk_data.empty:
+        median_fpts = risk_data['Avg_FPTS'].median()
+        median_vol = risk_data['Volatility'].median()
+        
+        fig.add_hline(y=median_vol, line_dash="dash", line_color="#cbd5e1", opacity=0.5)
+        fig.add_vline(x=median_fpts, line_dash="dash", line_color="#cbd5e1", opacity=0.5)
+    
+    return fig
+
+def create_category_distribution(category_df, position):
+    """Create pie chart showing player category distribution"""
+    if category_df.empty:
+        return go.Figure()
+    
+    category_counts = category_df['Category'].value_counts()
+    
+    colors = {
+        'Elite': '#10b981',
+        'Rising Star': '#3b82f6',
+        'Consistent': '#8b5cf6',
+        'Average': '#6b7280',
+        'Volatile': '#f59e0b',
+        'Declining': '#ef4444'
+    }
+    
+    fig = go.Figure(data=[
+        go.Pie(
+            labels=category_counts.index,
+            values=category_counts.values,
+            marker=dict(colors=[colors.get(cat, '#6b7280') for cat in category_counts.index]),
+            textinfo='label+percent',
+            textfont=dict(size=12, color='white'),
+            hovertemplate='<b>%{label}</b><br>%{value} players<br>%{percent}<extra></extra>'
+        )
+    ])
+    
+    fig.update_layout(
+        title=dict(
+            text=f'📊 Player Category Distribution - {position}',
+            font=dict(size=18, color='#1e3a8a'),
+            x=0.5
+        ),
+        height=400,
+        paper_bgcolor='rgba(255,255,255,1)'
+    )
+    
+    return fig
+
 def main():
     """Main dashboard function"""
     
-    # Header with NFL logo and modern styling
+    # Header with NFL logo - compact professional design
     st.markdown("""
-    <div style="text-align: center; background: linear-gradient(135deg, #f8fafc, #e2e8f0); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+    <div style="display: flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, #f8fafc, #e2e8f0); padding: 0.75rem 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0;">
         <img src="https://upload.wikimedia.org/wikipedia/en/a/a2/National_Football_League_logo.svg" 
              alt="NFL Logo" 
-             style="width: 120px; height: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); margin-bottom: 1rem;">
-        <h1 style="color: #1e293b; font-size: 2.5rem; font-weight: 800; margin: 0;">
-            🏈 Fantasy Football Analysis Dashboard
-        </h1>
-        <p style="color: #475569; font-size: 1.1rem; margin: 0.5rem 0 0 0; font-weight: 500;">
-            Professional NFL Fantasy Football Analytics & Insights
-        </p>
+             style="width: 50px; height: auto; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));">
+        <div style="flex: 1;">
+            <h1 style="color: #1e293b; font-size: 1.5rem; font-weight: 700; margin: 0; line-height: 1.2;">
+                Fantasy Football Analysis Dashboard
+            </h1>
+            <p style="color: #64748b; font-size: 0.875rem; margin: 0.25rem 0 0 0; font-weight: 400;">
+                Professional NFL Analytics & Insights
+            </p>
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
     # Load data with progress indicator
     with st.spinner('🔄 Loading fantasy football data...'):
         analyzer = load_data()
-    
-    
-    # Week filter
-    selected_weeks = create_week_filter()
     
     # Sidebar for navigation with NFL branding
     st.sidebar.markdown("""
@@ -838,73 +1208,67 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    st.sidebar.markdown('<h3 style="text-align: center; color: #374151; margin-bottom: 1rem;">Navigation</h3>', unsafe_allow_html=True)
+    # Season selector in sidebar
+    st.sidebar.markdown('<h3 style="text-align: center; color: #ffffff; margin-bottom: 1rem; font-weight: 700;">Season Selection</h3>', unsafe_allow_html=True)
+    if hasattr(analyzer, 'available_seasons') and len(analyzer.available_seasons) > 0:
+        selected_season = st.sidebar.selectbox(
+            "Select Season:",
+            analyzer.available_seasons,
+            index=len(analyzer.available_seasons) - 1  # Default to most recent
+        )
+    else:
+        selected_season = "2025"  # Default fallback
+    
+    st.sidebar.markdown("---")
+    
+    # Week filter
+    selected_weeks = create_week_filter(analyzer, selected_season)
+    
+    st.sidebar.markdown("---")
+    
+    st.sidebar.markdown('<h3 style="text-align: center; color: #ffffff; margin-bottom: 1rem; font-weight: 700;">Navigation</h3>', unsafe_allow_html=True)
     page = st.sidebar.selectbox(
         "Choose a page:",
-        ["Overview", "Position Analysis", "Weekly Trends", "Consistency Analysis", "About"]
+        ["Overview", "Position Analysis", "Weekly Trends", "Consistency Analysis", "ML Forecasts", "About"]
     )
     
     if page == "Overview":
-        show_overview(analyzer, selected_weeks)
+        show_overview(analyzer, selected_weeks, selected_season)
     elif page == "Position Analysis":
-        show_position_analysis(analyzer, selected_weeks)
+        show_position_analysis(analyzer, selected_weeks, selected_season)
     elif page == "Weekly Trends":
-        show_weekly_trends(analyzer, selected_weeks)
+        show_weekly_trends(analyzer, selected_weeks, selected_season)
     elif page == "Consistency Analysis":
-        show_consistency_analysis(analyzer, selected_weeks)
+        show_consistency_analysis(analyzer, selected_weeks, selected_season)
+    elif page == "ML Forecasts":
+        show_ml_forecast(analyzer, selected_weeks, selected_season)
     elif page == "About":
         show_about()
 
-def show_overview(analyzer, selected_weeks):
+def show_overview(analyzer, selected_weeks, selected_season):
     """Show overview page"""
-    st.markdown('<h2 class="section-header">📊 Season Overview</h2>', unsafe_allow_html=True)
-    
-    # Debug: Show what data we have
-    try:
-        selected_weeks_count = len(selected_weeks) if selected_weeks else 0
-        season_data_count = len(analyzer.season_data) if hasattr(analyzer, 'season_data') and analyzer.season_data else 0
-        
-        st.markdown(f"""
-        <div style="background: #f8fafc; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #e2e8f0;">
-            <strong style="color: #475569;">🔍 Debug Info:</strong> 
-            <span style="color: #64748b;">Selected weeks: {selected_weeks_count} | 
-            Season data available: {season_data_count} positions</span>
-        </div>
-        """, unsafe_allow_html=True)
-    except Exception as e:
-        st.markdown(f"""
-        <div style="background: #fef2f2; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #ef4444;">
-            <strong style="color: #dc2626;">⚠️ Debug Error:</strong> 
-            <span style="color: #6b7280;">{str(e)[:50]}</span>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f'<h2 class="section-header">📊 {selected_season} Season Overview</h2>', unsafe_allow_html=True)
     
     # Key metrics with modern styling
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+    st.markdown('<div class="metric-card" style="margin-top: 0.5rem;">', unsafe_allow_html=True)
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         try:
             if selected_weeks and len(selected_weeks) < 18:
                 # Use filtered data for top QB
-                qb_data = get_filtered_data(analyzer, selected_weeks, 'QB')
+                qb_data = get_filtered_data(analyzer, selected_weeks, 'QB', selected_season)
                 if qb_data is not None and not qb_data.empty:
                     top_qb = qb_data.iloc[0]
                     player_name = top_qb['Player'].split(' (')[0]
-                    # Truncate long names to fit better
-                    if len(player_name) > 15:
-                        player_name = player_name[:12] + "..."
                     st.metric("🏈 #1 QB", player_name, f"{top_qb['Total_FPTS']:.1f} pts")
                 else:
                     st.metric("🏈 #1 QB", "N/A", "No data")
             else:
                 # Use season data
-                qb_top = analyzer.get_top_performers('QB', week=None, top_n=1)
+                qb_top = analyzer.get_top_performers('QB', week=None, top_n=1, season=selected_season)
                 if qb_top is not None and not qb_top.empty:
                     player_name = qb_top.iloc[0]['Player'].split(' (')[0]
-                    # Truncate long names to fit better
-                    if len(player_name) > 15:
-                        player_name = player_name[:12] + "..."
                     st.metric("🏈 #1 QB", player_name, f"{qb_top.iloc[0]['FPTS']:.1f} pts")
                 else:
                     st.metric("🏈 #1 QB", "N/A", "No data")
@@ -914,23 +1278,17 @@ def show_overview(analyzer, selected_weeks):
     with col2:
         try:
             if selected_weeks and len(selected_weeks) < 18:
-                rb_data = get_filtered_data(analyzer, selected_weeks, 'RB')
+                rb_data = get_filtered_data(analyzer, selected_weeks, 'RB', selected_season)
                 if rb_data is not None and not rb_data.empty:
                     top_rb = rb_data.iloc[0]
                     player_name = top_rb['Player'].split(' (')[0]
-                    # Truncate long names to fit better
-                    if len(player_name) > 15:
-                        player_name = player_name[:12] + "..."
                     st.metric("🏃‍♂️ #1 RB", player_name, f"{top_rb['Total_FPTS']:.1f} pts")
                 else:
                     st.metric("🏃‍♂️ #1 RB", "N/A", "No data")
             else:
-                rb_top = analyzer.get_top_performers('RB', week=None, top_n=1)
+                rb_top = analyzer.get_top_performers('RB', week=None, top_n=1, season=selected_season)
                 if rb_top is not None and not rb_top.empty:
                     player_name = rb_top.iloc[0]['Player'].split(' (')[0]
-                    # Truncate long names to fit better
-                    if len(player_name) > 15:
-                        player_name = player_name[:12] + "..."
                     st.metric("🏃‍♂️ #1 RB", player_name, f"{rb_top.iloc[0]['FPTS']:.1f} pts")
                 else:
                     st.metric("🏃‍♂️ #1 RB", "N/A", "No data")
@@ -940,23 +1298,17 @@ def show_overview(analyzer, selected_weeks):
     with col3:
         try:
             if selected_weeks and len(selected_weeks) < 18:
-                wr_data = get_filtered_data(analyzer, selected_weeks, 'WR')
+                wr_data = get_filtered_data(analyzer, selected_weeks, 'WR', selected_season)
                 if wr_data is not None and not wr_data.empty:
                     top_wr = wr_data.iloc[0]
                     player_name = top_wr['Player'].split(' (')[0]
-                    # Truncate long names to fit better
-                    if len(player_name) > 15:
-                        player_name = player_name[:12] + "..."
                     st.metric("🎯 #1 WR", player_name, f"{top_wr['Total_FPTS']:.1f} pts")
                 else:
                     st.metric("🎯 #1 WR", "N/A", "No data")
             else:
-                wr_top = analyzer.get_top_performers('WR', week=None, top_n=1)
+                wr_top = analyzer.get_top_performers('WR', week=None, top_n=1, season=selected_season)
                 if wr_top is not None and not wr_top.empty:
                     player_name = wr_top.iloc[0]['Player'].split(' (')[0]
-                    # Truncate long names to fit better
-                    if len(player_name) > 15:
-                        player_name = player_name[:12] + "..."
                     st.metric("🎯 #1 WR", player_name, f"{wr_top.iloc[0]['FPTS']:.1f} pts")
                 else:
                     st.metric("🎯 #1 WR", "N/A", "No data")
@@ -966,23 +1318,17 @@ def show_overview(analyzer, selected_weeks):
     with col4:
         try:
             if selected_weeks and len(selected_weeks) < 18:
-                te_data = get_filtered_data(analyzer, selected_weeks, 'TE')
+                te_data = get_filtered_data(analyzer, selected_weeks, 'TE', selected_season)
                 if te_data is not None and not te_data.empty:
                     top_te = te_data.iloc[0]
                     player_name = top_te['Player'].split(' (')[0]
-                    # Truncate long names to fit better
-                    if len(player_name) > 15:
-                        player_name = player_name[:12] + "..."
                     st.metric("🎪 #1 TE", player_name, f"{top_te['Total_FPTS']:.1f} pts")
                 else:
                     st.metric("🎪 #1 TE", "N/A", "No data")
             else:
-                te_top = analyzer.get_top_performers('TE', week=None, top_n=1)
+                te_top = analyzer.get_top_performers('TE', week=None, top_n=1, season=selected_season)
                 if te_top is not None and not te_top.empty:
                     player_name = te_top.iloc[0]['Player'].split(' (')[0]
-                    # Truncate long names to fit better
-                    if len(player_name) > 15:
-                        player_name = player_name[:12] + "..."
                     st.metric("🎪 #1 TE", player_name, f"{te_top.iloc[0]['FPTS']:.1f} pts")
                 else:
                     st.metric("🎪 #1 TE", "N/A", "No data")
@@ -990,35 +1336,6 @@ def show_overview(analyzer, selected_weeks):
             st.metric("🎪 #1 TE", "Error", str(e)[:20])
     
     st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Fallback display in case metrics don't show
-    st.markdown("""
-    <div style="background: #f9fafb; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; border: 1px solid #e5e7eb;">
-        <h4 style="color: #374151; margin-bottom: 0.5rem; font-size: 1rem;">📊 Quick Stats:</h4>
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
-            <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
-                <div style="font-weight: 600; color: #1e3a8a; font-size: 0.8rem;">🏈 #1 QB</div>
-                <div style="color: #6b7280; font-size: 0.9rem; word-wrap: break-word;">Lamar Jackson</div>
-                <div style="color: #059669; font-weight: 600; font-size: 0.85rem;">460.8 pts</div>
-            </div>
-            <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
-                <div style="font-weight: 600; color: #1e3a8a; font-size: 0.8rem;">🏃‍♂️ #1 RB</div>
-                <div style="color: #6b7280; font-size: 0.9rem; word-wrap: break-word;">Saquon Barkley</div>
-                <div style="color: #059669; font-weight: 600; font-size: 0.85rem;">361.8 pts</div>
-            </div>
-            <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
-                <div style="font-weight: 600; color: #1e3a8a; font-size: 0.8rem;">🎯 #1 WR</div>
-                <div style="color: #6b7280; font-size: 0.9rem; word-wrap: break-word;">Ja'Marr Chase</div>
-                <div style="color: #059669; font-weight: 600; font-size: 0.85rem;">291.6 pts</div>
-            </div>
-            <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 0.25rem; border: 1px solid #d1d5db;">
-                <div style="font-weight: 600; color: #1e3a8a; font-size: 0.8rem;">🎪 #1 TE</div>
-                <div style="color: #6b7280; font-size: 0.9rem; word-wrap: break-word;">George Kittle</div>
-                <div style="color: #059669; font-weight: 600; font-size: 0.85rem;">190.8 pts</div>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
     
     # Top performers by position
     st.markdown('<h3 class="subsection-header">🏆 Top Performers by Position</h3>', unsafe_allow_html=True)
@@ -1029,28 +1346,28 @@ def show_overview(analyzer, selected_weeks):
         with tabs[i]:
             if selected_weeks and len(selected_weeks) < 18:
                 # Use filtered data
-                position_data = get_filtered_data(analyzer, selected_weeks, position)
+                position_data = get_filtered_data(analyzer, selected_weeks, position, selected_season)
                 if position_data is not None:
                     fig = create_top_performers_chart(position_data, position, f"Top 10 {position}s", selected_weeks)
                     st.plotly_chart(fig, use_container_width=True)
                     
                     # Show data table
-                    st.subheader(f"Top 10 {position}s Data")
-                    st.dataframe(position_data.head(10), use_container_width=True)
+                    st.markdown(f'<div class="data-header">📊 Top 10 {position}s Data</div>', unsafe_allow_html=True)
+                    st.dataframe(format_column_names(position_data.head(10)), use_container_width=True)
             else:
                 # Use season data
-                top_performers = analyzer.get_top_performers(position, week=None, top_n=10)
+                top_performers = analyzer.get_top_performers(position, week=None, top_n=10, season=selected_season)
                 if top_performers is not None:
                     fig = create_top_performers_chart(top_performers, position, f"Top 10 {position}s")
                     st.plotly_chart(fig, use_container_width=True)
                     
                     # Show data table
-                    st.subheader(f"Top 10 {position}s Data")
-                    st.dataframe(top_performers, use_container_width=True)
+                    st.markdown(f'<div class="data-header">📊 Top 10 {position}s Data</div>', unsafe_allow_html=True)
+                    st.dataframe(format_column_names(top_performers), use_container_width=True)
 
-def show_position_analysis(analyzer, selected_weeks):
+def show_position_analysis(analyzer, selected_weeks, selected_season):
     """Show position-specific analysis"""
-    st.markdown('<h2 class="section-header">🎯 Position Analysis</h2>', unsafe_allow_html=True)
+    st.markdown(f'<h2 class="section-header">🎯 {selected_season} Position Analysis</h2>', unsafe_allow_html=True)
     
     position = st.selectbox("Select Position:", ['QB', 'RB', 'WR', 'TE'])
     
@@ -1059,47 +1376,47 @@ def show_position_analysis(analyzer, selected_weeks):
     
     if selected_weeks and len(selected_weeks) < 18:
         # Use filtered data
-        position_data = get_filtered_data(analyzer, selected_weeks, position)
+        position_data = get_filtered_data(analyzer, selected_weeks, position, selected_season)
         if position_data is not None:
             fig = create_top_performers_chart(position_data, position, f"Top 10 {position}s", selected_weeks)
             st.plotly_chart(fig, use_container_width=True)
             
             # Show data table
-            st.dataframe(position_data.head(10), use_container_width=True)
+            st.dataframe(format_column_names(position_data.head(10)), use_container_width=True)
     else:
         # Use season data
-        top_performers = analyzer.get_top_performers(position, week=None, top_n=10)
+        top_performers = analyzer.get_top_performers(position, week=None, top_n=10, season=selected_season)
         if top_performers is not None:
             fig = create_top_performers_chart(top_performers, position, f"Top 10 {position}s")
             st.plotly_chart(fig, use_container_width=True)
             
             # Show data table
-            st.dataframe(top_performers, use_container_width=True)
+            st.dataframe(format_column_names(top_performers), use_container_width=True)
 
-def show_weekly_trends(analyzer, selected_weeks):
+def show_weekly_trends(analyzer, selected_weeks, selected_season):
     """Show weekly trends analysis"""
-    st.markdown('<h2 class="section-header">📈 Weekly Trends</h2>', unsafe_allow_html=True)
+    st.markdown(f'<h2 class="section-header">📈 {selected_season} Weekly Trends</h2>', unsafe_allow_html=True)
     
     position = st.selectbox("Select Position:", ['QB', 'RB', 'WR', 'TE'])
     top_n = st.slider("Number of top players to show:", 3, 10, 5)
     
     # Weekly trends chart
-    fig = create_weekly_trends_chart(analyzer, position, top_n, selected_weeks)
+    fig = create_weekly_trends_chart(analyzer, position, top_n, selected_weeks, selected_season)
     st.plotly_chart(fig, use_container_width=True)
     
     # Weekly summary
     if selected_weeks and len(selected_weeks) < 18:
-        st.subheader(f"Weekly Summary ({len(selected_weeks)} weeks)")
+        st.markdown(f'<div class="data-header">📅 Weekly Summary ({len(selected_weeks)} weeks)</div>', unsafe_allow_html=True)
         for week in selected_weeks:
-            if week in analyzer.weekly_data and position in analyzer.weekly_data[week]:
-                df = analyzer.weekly_data[week][position]
+            if selected_season in analyzer.weekly_data and week in analyzer.weekly_data[selected_season] and position in analyzer.weekly_data[selected_season][week]:
+                df = analyzer.weekly_data[selected_season][week][position]
                 top_3 = df.nlargest(3, 'FPTS')[['Player', 'FPTS']]
                 st.write(f"**{week} - Top 3 {position}s:**")
                 st.dataframe(top_3, use_container_width=True)
 
-def show_consistency_analysis(analyzer, selected_weeks):
+def show_consistency_analysis(analyzer, selected_weeks, selected_season):
     """Show consistency analysis"""
-    st.markdown('<h2 class="section-header">🎯 Consistency Analysis</h2>', unsafe_allow_html=True)
+    st.markdown(f'<h2 class="section-header">🎯 {selected_season} Consistency Analysis</h2>', unsafe_allow_html=True)
     
     position = st.selectbox("Select Position:", ['QB', 'RB', 'WR', 'TE'])
     min_games = st.slider("Minimum games played:", 3, 10, 5)
@@ -1114,7 +1431,7 @@ def show_consistency_analysis(analyzer, selected_weeks):
         </div>
         """, unsafe_allow_html=True)
     
-    consistency = analyzer.get_consistency_analysis(position, min_games=min_games)
+    consistency = analyzer.get_consistency_analysis(position, min_games=min_games, season=selected_season)
     
     if not consistency.empty:
         # Consistency chart
@@ -1122,11 +1439,11 @@ def show_consistency_analysis(analyzer, selected_weeks):
         st.plotly_chart(fig, use_container_width=True)
         
         # Detailed consistency data
-        st.subheader("Detailed Consistency Analysis")
-        st.dataframe(consistency, use_container_width=True)
+        st.markdown('<div class="data-header">📊 Detailed Consistency Analysis</div>', unsafe_allow_html=True)
+        st.dataframe(format_column_names(consistency), use_container_width=True)
         
         # Consistency insights
-        st.subheader("Key Insights")
+        st.markdown('<div class="data-header">💡 Key Insights</div>', unsafe_allow_html=True)
         most_consistent = consistency.iloc[0]
         least_consistent = consistency.iloc[-1]
         
@@ -1140,6 +1457,276 @@ def show_consistency_analysis(analyzer, selected_weeks):
             st.warning(f"**Least Consistent:** {least_consistent['Player']}")
             st.write(f"Average: {least_consistent['Avg_FPTS']:.1f} FPTS")
             st.write(f"Consistency Score: {least_consistent['Consistency_Score']:.2f}")
+
+def show_ml_forecast(analyzer, selected_weeks, selected_season):
+    """Show ML forecasting and predictions page"""
+    st.markdown(f'<h2 class="section-header">🤖 {selected_season} ML Forecasts & Predictions</h2>', unsafe_allow_html=True)
+    
+    # Import ML forecaster
+    try:
+        from fantasy_ml_forecaster import FantasyMLForecaster
+        forecaster = FantasyMLForecaster(analyzer, selected_season)
+    except Exception as e:
+        st.error(f"Error loading ML forecaster: {str(e)}")
+        st.info("ML forecasting features require additional packages. Install with: pip install -r requirements.txt")
+        return
+    
+    # Data availability check
+    if selected_season not in analyzer.weekly_data or not analyzer.weekly_data[selected_season]:
+        st.warning(f"No weekly data available for {selected_season} season. ML forecasts require historical weekly data.")
+        st.info("Please ensure you have weekly data loaded for the selected season.")
+        return
+    
+    weeks_available = len(analyzer.weekly_data[selected_season])
+    if weeks_available < 3:
+        st.warning(f"Only {weeks_available} weeks of data available. ML forecasts require at least 3 weeks of historical data for meaningful predictions.")
+        return
+    
+    # Show data info
+    st.info(f"📊 Analyzing {weeks_available} weeks of {selected_season} season data for ML predictions")
+    
+    # Position selector
+    position = st.selectbox("Select Position:", ['QB', 'RB', 'WR', 'TE'], key='ml_position')
+    
+    # Create tabs for different ML analyses
+    tabs = st.tabs(["Next Week Predictions", "Season Projections", "Breakout & Bust Analysis", "Risk Assessment"])
+    
+    # Tab 1: Next Week Predictions
+    with tabs[0]:
+        st.markdown('<h3 class="subsection-header">🔮 Next Week Predictions</h3>', unsafe_allow_html=True)
+        
+        with st.spinner('Generating forecasts...'):
+            try:
+                forecasts_df = forecaster.get_all_player_forecasts(position, top_n=10)
+                    
+            except Exception as e:
+                st.error(f"❌ Error generating forecasts: {str(e)}")
+                import traceback
+                st.code(traceback.format_exc())
+                forecasts_df = pd.DataFrame()
+        
+        if forecasts_df is not None and not forecasts_df.empty:
+            st.markdown('<div class="data-header">📊 Top 10 Predicted Performers for Next Week</div>', unsafe_allow_html=True)
+            st.dataframe(format_column_names(forecasts_df), use_container_width=True)
+            
+            # Player selector for detailed forecast
+            st.markdown("---")
+            st.markdown('<div class="data-header">📈 Detailed Player Forecast</div>', unsafe_allow_html=True)
+            
+            players = [p.split(' (')[0] for p in forecasts_df['Player']]
+            selected_player = st.selectbox("Select player for detailed forecast:", players, key='forecast_player')
+            
+            if selected_player:
+                # Get player data
+                from fantasy_ml_forecaster import FantasyMLForecaster
+                forecaster_detail = FantasyMLForecaster(analyzer, selected_season)
+                historical_data = forecaster_detail.prepare_player_data(selected_player, position)
+                forecast_data = forecaster_detail.forecast_next_week(selected_player, position)
+                
+                if not historical_data.empty and forecast_data:
+                    # Show forecast chart
+                    fig = create_forecast_chart(selected_player, forecast_data, historical_data)
+                    st.plotly_chart(fig, use_container_width=True)
+                    
+                    # Show forecast details
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Predicted FPTS", f"{forecast_data['predicted_fpts']:.1f}")
+                    with col2:
+                        st.metric("Lower Bound", f"{forecast_data['lower_bound']:.1f}")
+                    with col3:
+                        st.metric("Upper Bound", f"{forecast_data['upper_bound']:.1f}")
+        else:
+            st.info("No forecasts generated. This could be due to insufficient weekly data for individual players.")
+    
+    # Tab 2: Season Projections
+    with tabs[1]:
+        st.markdown('<h3 class="subsection-header">📅 Season-End Projections</h3>', unsafe_allow_html=True)
+        
+        projections = []
+        
+        try:
+            # Try season data first
+            top_players = analyzer.get_top_performers(position, week=None, top_n=15, season=selected_season)
+            
+            # If no season data, use weekly data fallback
+            if top_players is None or top_players.empty:
+                top_players = forecaster._get_top_from_weekly(position, top_n=15)
+                
+        except Exception as e:
+            st.error(f"Error getting top performers: {str(e)}")
+            import traceback
+            st.code(traceback.format_exc())
+            top_players = None
+        
+        if top_players is not None and not top_players.empty:
+            with st.spinner('Calculating projections...'):
+                for _, row in top_players.iterrows():
+                    player_name = row['Player'].split(' (')[0]
+                    projection = forecaster.forecast_season_end(player_name, position)
+                    
+                    if projection:
+                        projections.append({
+                            'Player': row['Player'],
+                            'Current_Total': projection['current_total'],
+                            'Projected_Total': projection['projected_total'],
+                            'Weeks_Remaining': projection['weeks_remaining'],
+                            'Projected_Avg': projection['avg_per_week']
+                        })
+            
+            if projections:
+                proj_df = pd.DataFrame(projections)
+                proj_df = proj_df.sort_values('Projected_Total', ascending=False)
+                proj_df['Projected_Rank'] = range(1, len(proj_df) + 1)
+                
+                st.markdown('<div class="data-header">📊 Projected Season-End Rankings</div>', unsafe_allow_html=True)
+                st.dataframe(format_column_names(proj_df), use_container_width=True)
+                
+                # Show projection chart
+                fig = go.Figure()
+                players = [p.split(' (')[0] for p in proj_df['Player'].head(10)]
+                
+                fig.add_trace(go.Bar(
+                    name='Current Total',
+                    x=players,
+                    y=proj_df['Current_Total'].head(10),
+                    marker_color='#3b82f6'
+                ))
+                
+                fig.add_trace(go.Bar(
+                    name='Projected Additional',
+                    x=players,
+                    y=(proj_df['Projected_Total'] - proj_df['Current_Total']).head(10),
+                    marker_color='#10b981'
+                ))
+                
+                fig.update_layout(
+                    title=f'Season-End Projections - Top 10 {position}s',
+                    xaxis_title='Players',
+                    yaxis_title='Fantasy Points',
+                    barmode='stack',
+                    height=450,
+                    plot_bgcolor='rgba(255,255,255,1)',
+                    paper_bgcolor='rgba(255,255,255,1)'
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info(f"No projection data available for {position}s.")
+    
+    # Tab 3: Breakout & Bust Analysis
+    with tabs[2]:
+        st.markdown('<h3 class="subsection-header">🚀 Breakout & Bust Analysis</h3>', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown('<div class="data-header">🚀 Breakout Candidates</div>', unsafe_allow_html=True)
+            with st.spinner('Identifying breakouts...'):
+                try:
+                    breakouts = forecaster.identify_breakout_players(position, threshold=0.10, min_weeks=3)
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+                    breakouts = pd.DataFrame()
+            
+            if not breakouts.empty:
+                st.dataframe(format_column_names(breakouts.head(10)), use_container_width=True)
+                fig = create_breakout_chart(breakouts, position)
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("No significant breakout candidates identified (threshold: >10% improvement).")
+        
+        with col2:
+            st.markdown('<div class="data-header">⚠️ Bust Risks</div>', unsafe_allow_html=True)
+            with st.spinner('Identifying bust risks...'):
+                try:
+                    busts = forecaster.identify_bust_risks(position, threshold=-0.10, min_weeks=3)
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+                    busts = pd.DataFrame()
+            
+            if not busts.empty:
+                st.dataframe(format_column_names(busts.head(10)), use_container_width=True)
+                
+                # Bust risk chart
+                top_10 = busts.head(10)
+                players = [p.split(' (')[0] for p in top_10['Player']]
+                
+                fig = go.Figure(data=[
+                    go.Bar(
+                        x=top_10['Risk_Score'],
+                        y=players,
+                        orientation='h',
+                        marker_color='#ef4444',
+                        text=[f"{val:.1f}%" for val in top_10['Decline']],
+                        textposition='auto',
+                        textfont=dict(size=12, color='white')
+                    )
+                ])
+                
+                fig.update_layout(
+                    title=f'⚠️ High Bust Risk - {position}',
+                    xaxis_title='Risk Score',
+                    yaxis_title='Players',
+                    yaxis=dict(
+                        categoryorder='total ascending',
+                        tickfont=dict(size=13, color='#111827')
+                    ),
+                    height=450,
+                    plot_bgcolor='rgba(255,255,255,1)',
+                    paper_bgcolor='rgba(255,255,255,1)',
+                    margin=dict(l=150, r=20, t=60, b=20)
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("No significant bust risks identified (threshold: >10% decline).")
+    
+    # Tab 4: Risk Assessment
+    with tabs[3]:
+        st.markdown('<h3 class="subsection-header">🎯 Risk Assessment & Player Categories</h3>', unsafe_allow_html=True)
+        
+        with st.spinner('Analyzing player categories...'):
+            try:
+                categories = forecaster.predict_player_category(position)
+                risk_assessment = forecaster.get_risk_assessment(position)
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+                categories = pd.DataFrame()
+                risk_assessment = pd.DataFrame()
+        
+        if not categories.empty:
+            # Category distribution
+            col1, col2 = st.columns([1, 1])
+            
+            with col1:
+                fig = create_category_distribution(categories, position)
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                st.markdown('<div class="data-header">📋 Player Categories</div>', unsafe_allow_html=True)
+                st.dataframe(format_column_names(categories), use_container_width=True)
+            
+            # Risk matrix
+            if not risk_assessment.empty:
+                st.markdown("---")
+                st.markdown('<div class="data-header">🎯 Risk/Reward Matrix</div>', unsafe_allow_html=True)
+                fig = create_risk_matrix(risk_assessment, position)
+                st.plotly_chart(fig, use_container_width=True)
+                
+                # Legend explanation
+                st.markdown("""
+                <div style="background: #f9fafb; padding: 1rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; margin-top: 1rem;">
+                    <h4 style="color: #374151; margin-bottom: 0.5rem; font-size: 0.95rem;">📊 Risk Matrix Guide:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; font-size: 0.85rem;">
+                        <div><span style="color: #10b981;">●</span> <strong>Low Volatility:</strong> Consistent performers</div>
+                        <div><span style="color: #f59e0b;">●</span> <strong>Medium Volatility:</strong> Moderate risk</div>
+                        <div><span style="color: #ef4444;">●</span> <strong>High Volatility:</strong> Boom/bust players</div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.info(f"Insufficient data for ML analysis of {position}s.")
 
 def show_about():
     """Show about page"""
