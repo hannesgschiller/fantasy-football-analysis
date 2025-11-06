@@ -692,7 +692,7 @@ def create_week_filter(analyzer, selected_season):
         """, unsafe_allow_html=True)
         
     elif filter_type == "Single Week":
-        selected_week = st.selectbox("Select Week:", available_weeks)
+        selected_week = st.selectbox("Select Week:", available_weeks, key=f"week_select_{selected_season}")
         selected_weeks = [selected_week]
         st.markdown(f"""
         <div style="background: #f1f5f9; color: #475569; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; font-weight: 500;">
@@ -703,9 +703,9 @@ def create_week_filter(analyzer, selected_season):
     elif filter_type == "Week Range":
         col1, col2 = st.columns(2)
         with col1:
-            start_week = st.selectbox("Start Week:", available_weeks)
+            start_week = st.selectbox("Start Week:", available_weeks, key=f"start_week_{selected_season}")
         with col2:
-            end_week = st.selectbox("End Week:", available_weeks)
+            end_week = st.selectbox("End Week:", available_weeks, key=f"end_week_{selected_season}")
         
         start_idx = available_weeks.index(start_week)
         end_idx = available_weeks.index(end_week)
@@ -728,7 +728,8 @@ def create_week_filter(analyzer, selected_season):
         selected_weeks = st.multiselect(
             "Select Weeks:",
             available_weeks,
-            default=available_weeks[:5]  # Default to first 5 weeks
+            default=available_weeks[:5],  # Default to first 5 weeks
+            key=f"custom_weeks_{selected_season}"
         )
         if selected_weeks:
             st.markdown(f"""
