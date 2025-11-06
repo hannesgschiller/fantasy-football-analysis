@@ -392,12 +392,20 @@ def load_data():
         analyzer = FantasyFootballAnalyzer(data_path)
         analyzer.load_weekly_data()
         analyzer.load_season_data()
+        
+        # Verify data was actually loaded
+        if not analyzer.weekly_data or not analyzer.available_seasons:
+            raise Exception("No weekly data loaded - check folder structure")
+        
         st.session_state['using_sample_data'] = False
         st.session_state['data_path'] = data_path
         return analyzer
     except Exception as e:
         st.session_state['using_sample_data'] = True
         st.session_state['load_error'] = str(e)
+        st.error(f"DEBUG: Failed to load real data: {str(e)}")
+        import traceback
+        st.code(traceback.format_exc())
         return create_sample_data()
 
 def create_sample_data():
