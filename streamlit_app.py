@@ -1067,12 +1067,14 @@ def create_breakout_chart(breakout_df, position):
         return go.Figure()
     
     top_10 = breakout_df.head(10)
-    players = [p.split(' (')[0] for p in top_10['Player']]
+    
+    # Add ranking numbers (1-based) to player names
+    players_with_rank = [f"#{i+1} {p.split(' (')[0]}" for i, p in enumerate(top_10['Player'])]
     
     fig = go.Figure(data=[
         go.Bar(
             x=top_10['Momentum_Score'],
-            y=players,
+            y=players_with_rank,
             orientation='h',
             marker_color='#10b981',
             text=[f"+{val:.1f}%" for val in top_10['Improvement']],
@@ -1087,16 +1089,25 @@ def create_breakout_chart(breakout_df, position):
             font=dict(size=18, color='#1e3a8a'),
             x=0.5
         ),
-        xaxis_title='Momentum Score',
-        yaxis_title='Players',
+        xaxis_title=dict(
+            text='Momentum Score',
+            font=dict(size=14, color='#1f2937')
+        ),
+        yaxis_title=dict(
+            text='Players',
+            font=dict(size=14, color='#1f2937')
+        ),
         yaxis=dict(
             categoryorder='total ascending',
             tickfont=dict(size=13, color='#111827')
         ),
+        xaxis=dict(
+            tickfont=dict(size=12, color='#111827')
+        ),
         height=450,
         plot_bgcolor='rgba(255,255,255,1)',
         paper_bgcolor='rgba(255,255,255,1)',
-        margin=dict(l=150, r=20, t=60, b=20)
+        margin=dict(l=180, r=20, t=60, b=20)
     )
     
     return fig
@@ -1679,12 +1690,14 @@ def show_ml_forecast(analyzer, selected_weeks, selected_season):
                 
                 # Bust risk chart
                 top_10 = busts.head(10)
-                players = [p.split(' (')[0] for p in top_10['Player']]
+                
+                # Add ranking numbers (1-based) to player names
+                players_with_rank = [f"#{i+1} {p.split(' (')[0]}" for i, p in enumerate(top_10['Player'])]
                 
                 fig = go.Figure(data=[
                     go.Bar(
                         x=top_10['Risk_Score'],
-                        y=players,
+                        y=players_with_rank,
                         orientation='h',
                         marker_color='#ef4444',
                         text=[f"{val:.1f}%" for val in top_10['Decline']],
@@ -1694,17 +1707,30 @@ def show_ml_forecast(analyzer, selected_weeks, selected_season):
                 ])
                 
                 fig.update_layout(
-                    title=f'⚠️ High Bust Risk - {position}',
-                    xaxis_title='Risk Score',
-                    yaxis_title='Players',
+                    title=dict(
+                        text=f'⚠️ High Bust Risk - {position}',
+                        font=dict(size=18, color='#1e3a8a'),
+                        x=0.5
+                    ),
+                    xaxis_title=dict(
+                        text='Risk Score',
+                        font=dict(size=14, color='#1f2937')
+                    ),
+                    yaxis_title=dict(
+                        text='Players',
+                        font=dict(size=14, color='#1f2937')
+                    ),
                     yaxis=dict(
                         categoryorder='total ascending',
                         tickfont=dict(size=13, color='#111827')
                     ),
+                    xaxis=dict(
+                        tickfont=dict(size=12, color='#111827')
+                    ),
                     height=450,
                     plot_bgcolor='rgba(255,255,255,1)',
                     paper_bgcolor='rgba(255,255,255,1)',
-                    margin=dict(l=150, r=20, t=60, b=20)
+                    margin=dict(l=180, r=20, t=60, b=20)
                 )
                 
                 st.plotly_chart(fig, use_container_width=True)
