@@ -296,7 +296,10 @@ class FantasyMLForecaster:
         
         if breakout_candidates:
             df = pd.DataFrame(breakout_candidates)
-            return df.sort_values('Momentum_Score', ascending=False)
+            df = df.sort_values('Momentum_Score', ascending=False)
+            # Reset index to start at 1
+            df.index = range(1, len(df) + 1)
+            return df
         
         return pd.DataFrame()
     
@@ -357,7 +360,10 @@ class FantasyMLForecaster:
         
         if bust_risks:
             df = pd.DataFrame(bust_risks)
-            return df.sort_values('Risk_Score', ascending=False)
+            df = df.sort_values('Risk_Score', ascending=False)
+            # Reset index to start at 1
+            df.index = range(1, len(df) + 1)
+            return df
         
         return pd.DataFrame()
     

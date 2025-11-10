@@ -1670,7 +1670,7 @@ def show_ml_forecast(analyzer, selected_weeks, selected_season):
                     breakouts = pd.DataFrame()
             
             if not breakouts.empty:
-                st.dataframe(format_column_names(breakouts.head(10)), use_container_width=True)
+                st.dataframe(format_column_names(breakouts.head(5)), use_container_width=True, height=220)
                 fig = create_breakout_chart(breakouts, position)
                 st.plotly_chart(fig, use_container_width=True)
             else:
@@ -1686,7 +1686,7 @@ def show_ml_forecast(analyzer, selected_weeks, selected_season):
                     busts = pd.DataFrame()
             
             if not busts.empty:
-                st.dataframe(format_column_names(busts.head(10)), use_container_width=True)
+                st.dataframe(format_column_names(busts.head(5)), use_container_width=True, height=220)
                 
                 # Bust risk chart
                 top_10 = busts.head(10)
