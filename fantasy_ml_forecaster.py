@@ -265,7 +265,11 @@ class FantasyMLForecaster:
             return pd.DataFrame()
         
         for _, row in season_df.iterrows():
-            player_name = row['Player'].split(' (')[0]
+            # Skip if player name is NaN or not a string
+            if pd.isna(row['Player']) or not isinstance(row['Player'], str):
+                continue
+            
+            player_name = row['Player'].split(' (')[0] if '(' in row['Player'] else row['Player']
             player_data = self.prepare_player_data(player_name, position)
             
             if len(player_data) < min_weeks:
@@ -322,7 +326,11 @@ class FantasyMLForecaster:
             return pd.DataFrame()
         
         for _, row in season_df.iterrows():
-            player_name = row['Player'].split(' (')[0]
+            # Skip if player name is NaN or not a string
+            if pd.isna(row['Player']) or not isinstance(row['Player'], str):
+                continue
+            
+            player_name = row['Player'].split(' (')[0] if '(' in row['Player'] else row['Player']
             player_data = self.prepare_player_data(player_name, position)
             
             if len(player_data) < min_weeks:
@@ -423,7 +431,11 @@ class FantasyMLForecaster:
             return pd.DataFrame()
         
         for _, row in season_df.iterrows():
-            player_name = row['Player'].split(' (')[0]
+            # Skip if player name is NaN or not a string
+            if pd.isna(row['Player']) or not isinstance(row['Player'], str):
+                continue
+            
+            player_name = row['Player'].split(' (')[0] if '(' in row['Player'] else row['Player']
             player_data = self.prepare_player_data(player_name, position)
             
             if len(player_data) < min_weeks:
@@ -663,7 +675,11 @@ class FantasyMLForecaster:
             return pd.DataFrame()
         
         for _, row in season_df.iterrows():
-            player_name = row['Player'].split(' (')[0]
+            # Skip if player name is NaN or not a string
+            if pd.isna(row['Player']) or not isinstance(row['Player'], str):
+                continue
+            
+            player_name = row['Player'].split(' (')[0] if '(' in row['Player'] else row['Player']
             volatility = self.calculate_volatility_score(player_name, position)
             
             if volatility:
